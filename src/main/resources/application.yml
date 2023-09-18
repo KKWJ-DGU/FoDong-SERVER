@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: real
 
   mvc:
     pathmatch:
@@ -11,12 +11,12 @@ springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
-    path : /api/fodong/swagger-ui.html
+    path : /fodong/swagger-ui.html
     groups-order: DESC
     tags-sorter: :alpha
     operations-sorter: alpha
   api-docs:
-      path: /api/fodong/api-docs
+      path: /fodong/api-docs
       groups:
         enabled: true
   cache:
