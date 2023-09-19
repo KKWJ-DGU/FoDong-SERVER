@@ -5,7 +5,7 @@ import org.hibernate.boot.spi.MetadataBuilderContributor;
 import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.type.StandardBasicTypes;
 
-public class CustomMysqlDialect implements 성r {
+public class CustomMysqlDialect implements MetadataBuilderContributor {
 
     @Override
     public void contribute(MetadataBuilder metadataBuilder) {
