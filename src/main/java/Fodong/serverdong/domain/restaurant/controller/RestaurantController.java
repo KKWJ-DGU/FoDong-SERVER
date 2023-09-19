@@ -1,6 +1,6 @@
 package Fodong.serverdong.domain.restaurant.controller;
 
-import Fodong.serverdong.config.ApiDocumentResponse;
+import Fodong.serverdong.global.config.ApiDocumentResponse;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRandomRestaurantDto;
 import Fodong.serverdong.domain.restaurant.service.RestaurantService;
