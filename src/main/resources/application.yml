@@ -1,10 +1,16 @@
 spring:
   profiles:
-    active: real
+    active: dev
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  jpa:
+    properties:
+      hibernate:
+        metadata_builder_contributor: Fodong.serverdong.global.query.CustomMysqlDialect
+
 
 springdoc:
   packages-to-scan: Fodong.serverdong.domain
