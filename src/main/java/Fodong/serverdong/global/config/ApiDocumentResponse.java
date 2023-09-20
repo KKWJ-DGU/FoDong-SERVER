@@ -1,4 +1,4 @@
-package Fodong.serverdong.config;
+package Fodong.serverdong.global.config;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
