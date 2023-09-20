@@ -3,7 +3,6 @@ package Fodong.serverdong.domain.restaurant.repository;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRandomRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
