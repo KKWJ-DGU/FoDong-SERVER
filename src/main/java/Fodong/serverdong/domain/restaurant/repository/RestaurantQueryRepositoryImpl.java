@@ -44,7 +44,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 ))
                 .from(restaurant)
                 .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
-                .orderBy(NumberExpression.random().desc())
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .groupBy(restaurant.name)
                 .fetch();
 
