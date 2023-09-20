@@ -15,12 +15,10 @@ public class RestaurantService {
 
     private final RestaurantQueryRepositoryImpl restaurantQueryRepository;
 
-
-    @Transactional(readOnly = true)
+    @Transactional
     public List<ResponseRandomRestaurantDto> getRandomRestaurant() {
 
         return restaurantQueryRepository.getRandomRestaurant();
-
 
     }
 }

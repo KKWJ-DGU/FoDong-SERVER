@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.dto.response;
 import lombok.*;
+
 @AllArgsConstructor
 @Getter
 public class ResponseRandomRestaurantDto {
@@ -9,5 +10,8 @@ public class ResponseRandomRestaurantDto {
     private String categoryName;
     private String menuName;
     private int wishCount;
+    private Boolean wishState;
+
+
 
 }

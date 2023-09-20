@@ -13,7 +13,8 @@ import java.util.List;
 import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
-import static com.querydsl.jpa.JPAExpressions.select;
+import static Fodong.serverdong.domain.wishlist.QWishlist.wishlist;
+import static com.querydsl.jpa.JPAExpressions.*;
 
 @Repository
 public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
@@ -26,6 +27,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
 
     @Override
     public List<ResponseRandomRestaurantDto> getRandomRestaurant(){
+
         return query.
                 select(Projections.constructor(
                         ResponseRandomRestaurantDto.class,
@@ -37,12 +39,15 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
-                        restaurant.wishCount
+                        restaurant.wishCount,
+                        wishlist.member.id.isNotNull()
                 ))
                 .from(restaurant)
-                .leftJoin(restaurantCategory).on(restaurant.id.eq(restaurantCategory.id))
+                .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
                 .orderBy(NumberExpression.random().desc())
+                .groupBy(restaurant.name)
                 .fetch();
+
     }
 
 }
