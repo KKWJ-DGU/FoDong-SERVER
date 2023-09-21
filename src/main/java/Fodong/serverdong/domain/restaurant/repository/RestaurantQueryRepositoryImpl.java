@@ -3,6 +3,7 @@ package Fodong.serverdong.domain.restaurant.repository;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRandomRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -39,12 +40,15 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
-                        wishlist.member.id.isNotNull()
+                        restaurant.id.in(
+                                JPAExpressions.select(restaurant.id)
+                                        .from(restaurant)
+                                        .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                        .where(wishlist.member.id.eq(1L))
+                        )
                 ))
                 .from(restaurant)
-                .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-                .groupBy(restaurant.name)
                 .fetch();
 
     }
