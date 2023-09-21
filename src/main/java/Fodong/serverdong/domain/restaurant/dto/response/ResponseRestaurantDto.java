@@ -3,7 +3,7 @@ import lombok.*;
 
 @AllArgsConstructor
 @Getter
-public class ResponseRandomRestaurantDto {
+public class ResponseRestaurantDto {
 
     private String name;
     private String imgUrl;
