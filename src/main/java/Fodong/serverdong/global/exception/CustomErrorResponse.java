@@ -1,12 +1,9 @@
 package Fodong.serverdong.global.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
