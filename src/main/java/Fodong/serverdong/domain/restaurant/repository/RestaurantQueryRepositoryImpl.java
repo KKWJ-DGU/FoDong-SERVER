@@ -1,6 +1,6 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRandomRestaurantDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -25,12 +25,15 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
         this.query = new JPAQueryFactory(em);
     }
 
+    /**
+     * 랜덤 식당 리스트 조회
+     */
     @Override
-    public List<ResponseRandomRestaurantDto> getRandomRestaurant(){
+    public List<ResponseRestaurantDto> getRandomRestaurant(){
 
         return query.
                 select(Projections.constructor(
-                        ResponseRandomRestaurantDto.class,
+                        ResponseRestaurantDto.class,
                         restaurant.name,
                         restaurant.imgUrl,
                         select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
@@ -51,6 +54,38 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .fetch();
 
+    }
+
+    /**
+     * 카테고리 별 식당 리스트 조회
+     */
+    @Override
+    public List<ResponseRestaurantDto> getRestaurant(List<Long> categoryId){
+        return query
+                .select(Projections.constructor(
+                        ResponseRestaurantDto.class,
+                        restaurant.name,
+                        restaurant.imgUrl,
+                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                                .from(restaurantCategory)
+                                .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                                .from(menu)
+                                .where(menu.restaurant.id.eq(restaurant.id)),
+                        restaurant.wishCount,
+                        restaurant.id.in(
+                                JPAExpressions.select(restaurant.id)
+                                        .from(restaurant)
+                                        .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                        .where(wishlist.member.id.eq(1L))
+                        )
+
+                ))
+                .from(restaurant)
+                .leftJoin(restaurantCategory).on(restaurant.id.eq(restaurantCategory.restaurant.id))
+                .where(restaurantCategory.category.id.in(categoryId))
+                .distinct()
+                .fetch();
     }
 
 }
