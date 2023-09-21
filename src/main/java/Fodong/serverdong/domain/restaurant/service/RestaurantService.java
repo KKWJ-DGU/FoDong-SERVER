@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.restaurant.service;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,5 +32,13 @@ public class RestaurantService {
     @Transactional
     public List<ResponseRestaurantDto> getRestaurant(List<Long> categoryId) {
         return restaurantQueryRepository.getRestaurant(categoryId);
+    }
+
+    /**
+     * 식당 정보 조회
+     */
+    @Transactional
+    public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId) {
+        return restaurantQueryRepository.getRestaurantInfo(restaurantId);
     }
 }

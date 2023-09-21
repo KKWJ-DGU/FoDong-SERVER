@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -86,6 +87,37 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 .where(restaurantCategory.category.id.in(categoryId))
                 .distinct()
                 .fetch();
+    }
+
+    /**
+     * 식당 정보 조회
+     * @param restaurantId 식당 ID
+     */
+    @Override
+    public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId){
+        return query.select(Projections.constructor(
+                ResponseRestaurantInfoDto.class,
+                restaurant.name,
+                restaurant.imgUrl,
+                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                        .from(restaurantCategory)
+                        .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                restaurant.phoneNumber,
+                restaurant.webUrl,
+                select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                        .from(menu)
+                        .where(menu.restaurant.id.eq(restaurant.id)),
+                restaurant.wishCount,
+                restaurant.id.in(
+                        JPAExpressions.select(restaurant.id)
+                                .from(restaurant)
+                                .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                .where(wishlist.member.id.eq(1L))
+                )))
+                .from(restaurant)
+                .where(restaurant.id.eq(restaurantId))
+                .fetchOne();
+
     }
 
 }
