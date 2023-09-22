@@ -1,6 +1,5 @@
 package Fodong.serverdong.domain.restaurant.service;
 
-import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
