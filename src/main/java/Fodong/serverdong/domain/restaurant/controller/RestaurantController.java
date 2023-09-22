@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.controller;
 
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
@@ -33,5 +34,12 @@ public class RestaurantController {
     @GetMapping("/category/{categoryId}")
     public List<ResponseRestaurantDto> getRestaurant(@PathVariable List<Long> categoryId){
          return restaurantService.getRestaurant(categoryId);
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "식당 정보 조회" , description = "식당 정보를 조회합니다.")
+    @GetMapping("/info/{restaurantId}")
+    public ResponseRestaurantInfoDto getRestaurantInfo(@PathVariable Long restaurantId){
+        return restaurantService.getRestaurantInfo(restaurantId);
     }
 }
