@@ -48,4 +48,12 @@ public class RestaurantService {
 
         return restaurantQueryRepository.getRestaurantInfo(restaurantId);
     }
+
+    /**
+     * 랜덤 식당 1개 조회
+     */
+    public ResponseRestaurantDto getRandomRestaurantChoice() {
+
+        return restaurantQueryRepository.getRandomRestaurantChoice();
+    }
 }
