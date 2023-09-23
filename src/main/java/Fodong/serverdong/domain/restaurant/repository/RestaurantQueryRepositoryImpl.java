@@ -146,7 +146,6 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 ))
                 .from(restaurant)
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-                .limit(1L)
-                .fetchOne();
+                .fetchFirst();
     }
 }
