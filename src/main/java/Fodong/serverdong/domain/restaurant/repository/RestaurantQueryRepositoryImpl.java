@@ -120,4 +120,32 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
 
     }
 
+    /**
+     * 랜덤 식당 1개 조회
+     */
+    public ResponseRestaurantDto getRandomRestaurantChoice(){
+        return query
+                .select(Projections.constructor(
+                        ResponseRestaurantDto.class,
+                        restaurant.name,
+                        restaurant.imgUrl,
+                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                                .from(restaurantCategory)
+                                .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                                .from(menu)
+                                .where(menu.restaurant.id.eq(restaurant.id)),
+                        restaurant.wishCount,
+                        restaurant.id.in(
+                                JPAExpressions.select(restaurant.id)
+                                        .from(restaurant)
+                                        .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                        .where(wishlist.member.id.eq(1L))
+                        )
+
+                ))
+                .from(restaurant)
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .fetchFirst();
+    }
 }

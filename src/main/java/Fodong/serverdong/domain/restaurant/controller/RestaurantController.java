@@ -42,4 +42,11 @@ public class RestaurantController {
     public ResponseRestaurantInfoDto getRestaurantInfo(@PathVariable Long restaurantId){
         return restaurantService.getRestaurantInfo(restaurantId);
     }
+
+    @ApiDocumentResponse
+    @Operation(summary = "랜덤 식당 1개 조회" ,description = "식당 1개를 랜덤 조회합니다.")
+    @GetMapping("/random/choice")
+    public ResponseRestaurantDto getRestaurantChoice(){
+        return restaurantService.getRandomRestaurantChoice();
+    }
 }

@@ -1,6 +1,5 @@
 package Fodong.serverdong.domain.restaurant.service;
 
-import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
@@ -47,5 +46,13 @@ public class RestaurantService {
         restaurantRepository.findById(restaurantId).orElseThrow(()->new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
         return restaurantQueryRepository.getRestaurantInfo(restaurantId);
+    }
+
+    /**
+     * 랜덤 식당 1개 조회
+     */
+    public ResponseRestaurantDto getRandomRestaurantChoice() {
+
+        return restaurantQueryRepository.getRandomRestaurantChoice();
     }
 }
