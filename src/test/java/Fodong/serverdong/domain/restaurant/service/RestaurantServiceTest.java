@@ -1,7 +1,11 @@
 package Fodong.serverdong.domain.restaurant.service;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
+import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
+import Fodong.serverdong.global.exception.CustomErrorCode;
+import Fodong.serverdong.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +21,8 @@ import java.util.List;
 @Transactional
 class RestaurantServiceTest {
 
+    @Autowired
+    RestaurantRepository restaurantRepository;
     @Autowired
     RestaurantQueryRepositoryImpl restaurantQueryRepository;
 
@@ -52,6 +58,23 @@ class RestaurantServiceTest {
             log.info(restaurantDto.getWishState().toString());
             log.info("===========================================");
         }
+
+    }
+
+    @Test
+    @DisplayName("식당 정보 반환")
+    void getRestaurantInfo(){
+
+        Long restaurantId = 1L ;
+        restaurantRepository.findById(restaurantId).orElseThrow(()-> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
+
+        ResponseRestaurantInfoDto responseRestaurantInfoDto =
+                restaurantQueryRepository.getRestaurantInfo(restaurantId);
+
+        log.info(responseRestaurantInfoDto.getName());
+        log.info(responseRestaurantInfoDto.getCategoryName());
+        log.info(responseRestaurantInfoDto.getMenu());
+        log.info(responseRestaurantInfoDto.getPhoneNumber());
 
     }
 }
