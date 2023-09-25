@@ -130,10 +130,10 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         ResponseRestaurantDto.class,
                         restaurant.name,
                         restaurant.imgUrl,
-                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName).coalesce("카테고리 없음").as("categoryName"))
                                 .from(restaurantCategory)
                                 .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName).coalesce("메뉴 없음").as("menuName"))
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
@@ -146,7 +146,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
 
                 ))
                 .from(restaurant)
-                //.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-                .fetchOne();
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .fetchFirst();
     }
 }
