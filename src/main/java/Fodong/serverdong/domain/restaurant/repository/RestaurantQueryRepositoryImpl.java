@@ -123,6 +123,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
     /**
      * 랜덤 식당 1개 조회
      */
+    @Override
     public ResponseRestaurantDto getRandomRestaurantChoice(){
         return query
                 .select(Projections.constructor(
@@ -146,7 +147,6 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 ))
                 .from(restaurant)
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-                .limit(1L)
-                .fetchOne();
+                .fetchFirst();
     }
 }
