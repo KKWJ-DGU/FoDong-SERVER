@@ -123,16 +123,17 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
     /**
      * 랜덤 식당 1개 조회
      */
+    @Override
     public ResponseRestaurantDto getRandomRestaurantChoice(){
         return query
                 .select(Projections.constructor(
                         ResponseRestaurantDto.class,
                         restaurant.name,
                         restaurant.imgUrl,
-                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName).coalesce("카테고리 없음").as("categoryName"))
                                 .from(restaurantCategory)
                                 .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName).coalesce("메뉴 없음").as("menuName"))
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
