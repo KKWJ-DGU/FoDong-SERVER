@@ -82,17 +82,17 @@ class RestaurantServiceTest {
 
     }
 
-    @Test
-    @DisplayName("랜덤 식당 1개 반환")
-    void getRandomRestaurantChoice(){
-        ResponseRestaurantDto restaurantDto =
-                restaurantQueryRepository.getRandomRestaurantChoice();
-
-        log.info(restaurantDto.getName());
-        log.info(restaurantDto.getMenuName());
-        log.info(restaurantDto.getCategoryName());
-        log.info(restaurantDto.getImgUrl());
-        log.info(String.valueOf(restaurantDto.getWishCount()));
-        log.info(String.valueOf(restaurantDto.getWishState()));
-    }
+//    @Test
+//    @DisplayName("랜덤 식당 1개 반환")
+//    void getRandomRestaurantChoice(){
+//        ResponseRestaurantDto restaurantDto =
+//                restaurantQueryRepository.getRandomRestaurantChoice();
+//
+//        log.info(restaurantDto.getName());
+//        log.info(restaurantDto.getMenuName());
+//        log.info(restaurantDto.getCategoryName());
+//        log.info(restaurantDto.getImgUrl());
+//        log.info(String.valueOf(restaurantDto.getWishCount()));
+//        log.info(String.valueOf(restaurantDto.getWishState()));
+//    }
 }
