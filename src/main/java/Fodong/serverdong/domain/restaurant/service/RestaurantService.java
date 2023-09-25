@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.service;
 
+import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
@@ -21,6 +22,7 @@ public class RestaurantService {
 
     private final RestaurantQueryRepositoryImpl restaurantQueryRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CategoryRepository categoryRepository;
 
     /**
      * 랜덤 식당 리스트 조회
@@ -35,6 +37,8 @@ public class RestaurantService {
      */
     @Transactional
     public List<ResponseRestaurantDto> getRestaurant(List<Long> categoryId) {
+        categoryId.forEach(category ->
+                categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND)));
         return restaurantQueryRepository.getRestaurant(categoryId);
     }
 

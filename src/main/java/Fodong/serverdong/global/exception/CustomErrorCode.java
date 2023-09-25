@@ -12,9 +12,13 @@ import static org.springframework.http.HttpStatus.OK;
 public enum CustomErrorCode {
 
     SUCCESS(OK,"success"),
-    RESTAURANT_NOT_FOUND(BAD_REQUEST,"존재하지 않는 식당 정보 입니다.");
-    
+    RESTAURANT_NOT_FOUND(BAD_REQUEST,"존재하지 않는 식당 정보 입니다."),
+    CATEGORY_NOT_FOUND(BAD_REQUEST,"존재하지 않는 카테고리ID가 포함되어 있습니다.");
+
     private final HttpStatus httpStatus;
     private final String message;
 
+
 }
+
+
