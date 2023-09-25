@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.service;
 
+import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
@@ -65,7 +66,12 @@ class RestaurantServiceTest {
     @DisplayName("식당 정보 반환")
     void getRestaurantInfo(){
 
+
         Long restaurantId = 1L ;
+        Restaurant restaurant =
+                new Restaurant(1L,"세븐일레븐","webUrl","031-000-0000","경기도","imgUrl",0);
+        restaurantRepository.save(restaurant);
+
         restaurantRepository.findById(restaurantId).orElseThrow(()-> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
         ResponseRestaurantInfoDto responseRestaurantInfoDto =
