@@ -1,15 +1,24 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
+import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.function.LongPredicate;
 
 import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
@@ -148,5 +157,55 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 .from(restaurant)
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .fetchFirst();
+    }
+
+    /**
+     * 검색 식당 조회
+     */
+    public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId){
+
+        List<ResponseSearchRestaurantDto> searchRestaurant = query.select(
+                        Projections.constructor(
+                                ResponseSearchRestaurantDto.class,
+                                restaurant.name,
+                                restaurant.imgUrl,
+                                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.id))
+                                        .from(restaurantCategory)
+                                        .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                                        .from(restaurantCategory)
+                                        .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                                select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                                        .from(menu)
+                                        .where(menu.restaurant.id.eq(restaurant.id)),
+                                restaurant.wishCount,
+                                restaurant.id.in(
+                                        JPAExpressions.select(restaurant.id)
+                                                .from(restaurant)
+                                                .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                                .where(wishlist.member.id.eq(1L))
+                                )
+                        ))
+                .from(restaurantCategory)
+                .join(restaurantCategory.restaurant,restaurant)
+                .distinct()
+                .fetch();
+
+
+        HashSet<String> id = new HashSet<>();
+        categoryId.forEach(cate -> id.add(String.valueOf(cate)));
+
+        List<ResponseSearchRestaurantDto> getSearch = new ArrayList<>();
+
+        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
+            HashSet<String> searchId = new HashSet<>(Arrays.asList(restaurantDto.getCategoryId().split(",")));
+
+            if(searchId.containsAll(id)){
+                getSearch.add(restaurantDto);
+            }
+        }
+        return getSearch;
+
+
     }
 }

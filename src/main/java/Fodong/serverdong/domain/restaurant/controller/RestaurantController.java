@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.restaurant.controller;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
@@ -48,5 +49,11 @@ public class RestaurantController {
     @GetMapping("/random/choice")
     public ResponseRestaurantDto getRestaurantChoice(){
         return restaurantService.getRandomRestaurantChoice();
+    }
+    @ApiDocumentResponse
+    @Operation(summary = "검색 식당 조회",description = " 선택된 카테고리에 해당하는 식당을 조회합니다.")
+    @GetMapping("/search/{categoryId}")
+    public List<ResponseSearchRestaurantDto> getSearchRestaurant(@PathVariable List<Long> categoryId){
+        return restaurantService.getSearchRestaurant(categoryId);
     }
 }
