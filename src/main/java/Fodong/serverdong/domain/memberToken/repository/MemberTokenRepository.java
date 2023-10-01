@@ -11,4 +11,6 @@ public interface MemberTokenRepository extends JpaRepository<MemberToken, Long> 
 
     Optional<MemberToken> findByMemberId(Long memberId);
 
+    Optional<MemberToken> findByRefreshToken(String refreshToken);
+
 }
