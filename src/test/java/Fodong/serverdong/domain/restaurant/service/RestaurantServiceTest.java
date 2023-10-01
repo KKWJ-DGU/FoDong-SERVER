@@ -110,7 +110,6 @@ class RestaurantServiceTest {
         categoryId.add(1L);
         categoryId.add(3L);
 
-        categoryId.forEach(id -> categoryRepository.findById(id).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
         List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
 
