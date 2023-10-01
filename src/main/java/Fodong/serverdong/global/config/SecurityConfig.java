@@ -22,6 +22,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtService jwtService;
+    private final MemberRepository memberRepository;
+    private final MemberTokenRepository memberTokenRepository;
+
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring().antMatchers(
@@ -50,8 +54,8 @@ public class SecurityConfig {
                 // JWT 토큰 예외 처리부
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPointHandler)
-                .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(new CustomAuthenticationEntryPointHandler())
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService, memberRepository, memberTokenRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
