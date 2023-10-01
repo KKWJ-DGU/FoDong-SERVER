@@ -3,6 +3,7 @@ package Fodong.serverdong.domain.restaurant.service;
 import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @SpringBootTest
@@ -95,4 +97,39 @@ class RestaurantServiceTest {
 //        log.info(String.valueOf(restaurantDto.getWishCount()));
 //        log.info(String.valueOf(restaurantDto.getWishState()));
 //    }
+
+    @Test
+    @DisplayName("검색 식당 조회")
+    void getSearchRestaurant(){
+
+        List<Long> categoryId = new ArrayList<>();
+        categoryId.add(1L);
+        categoryId.add(3L);
+
+        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
+
+        HashSet<String> requestId = new HashSet<>();
+        categoryId.forEach(cate -> requestId.add(String.valueOf(cate)));
+
+        List<ResponseSearchRestaurantDto> getCategoryRestaurant = new ArrayList<>();
+
+        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
+            HashSet<String> searchId = new HashSet<>(List.of(restaurantDto.getCategoryId().split(",")));
+
+            if(searchId.containsAll(requestId)){
+                getCategoryRestaurant.add(restaurantDto);
+            }
+        }
+
+        for(ResponseSearchRestaurantDto searchRestaurantDto : getCategoryRestaurant){
+            log.info(searchRestaurantDto.getCategoryId());
+            log.info(searchRestaurantDto.getCategoryName());
+            log.info(searchRestaurantDto.getName());
+            log.info(searchRestaurantDto.getMenuName());
+            log.info(String.valueOf(searchRestaurantDto.getWishCount()));
+            log.info(String.valueOf(searchRestaurantDto.getWishState()));
+            log.info("===========================================");
+
+        }
+    }
 }
