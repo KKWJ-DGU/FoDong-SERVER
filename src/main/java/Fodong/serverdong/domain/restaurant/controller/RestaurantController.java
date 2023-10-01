@@ -45,9 +45,9 @@ public class RestaurantController {
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "랜덤 식당 1개 조회" ,description = "식당 1개를 랜덤 조회합니다.")
+    @Operation(summary = "랜덤 식당 추천" ,description = "랜덤으로 식당을 추천해줍니다.")
     @GetMapping("/random/choice")
-    public ResponseRestaurantDto getRestaurantChoice(){
+    public List<ResponseRestaurantDto> getRestaurantChoice(){
         return restaurantService.getRandomRestaurantChoice();
     }
     @ApiDocumentResponse
