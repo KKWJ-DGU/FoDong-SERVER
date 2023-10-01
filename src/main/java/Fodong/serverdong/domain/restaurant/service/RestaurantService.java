@@ -66,7 +66,7 @@ public class RestaurantService {
     @Transactional
     public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId) {
         categoryId.forEach(category ->
-                categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND)));
+                categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
         List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
 

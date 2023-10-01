@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.service;
 
+import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
@@ -28,6 +29,8 @@ class RestaurantServiceTest {
     RestaurantRepository restaurantRepository;
     @Autowired
     RestaurantQueryRepositoryImpl restaurantQueryRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Test
     @DisplayName("랜덤 식당 리스트")
@@ -106,6 +109,8 @@ class RestaurantServiceTest {
         List<Long> categoryId = new ArrayList<>();
         categoryId.add(1L);
         categoryId.add(3L);
+
+        categoryId.forEach(id -> categoryRepository.findById(id).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
         List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
 
