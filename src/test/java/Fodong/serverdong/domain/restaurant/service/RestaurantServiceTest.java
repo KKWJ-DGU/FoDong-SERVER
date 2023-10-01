@@ -1,8 +1,10 @@
 package Fodong.serverdong.domain.restaurant.service;
 
+import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @SpringBootTest
@@ -26,6 +29,8 @@ class RestaurantServiceTest {
     RestaurantRepository restaurantRepository;
     @Autowired
     RestaurantQueryRepositoryImpl restaurantQueryRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Test
     @DisplayName("랜덤 식당 리스트")
@@ -45,9 +50,7 @@ class RestaurantServiceTest {
     @Test
     @DisplayName("카테고리 별 식당 리스트")
     void getRestaurant() {
-        List<Long> categoryId = new ArrayList<>();
-        categoryId.add(1L);
-        categoryId.add(2L);
+        Long categoryId = 3L;
 
         List<ResponseRestaurantDto> restaurantDtoList = restaurantQueryRepository.getRestaurant(categoryId);
 
@@ -82,17 +85,56 @@ class RestaurantServiceTest {
 
     }
 
-//    @Test
-//    @DisplayName("랜덤 식당 1개 반환")
-//    void getRandomRestaurantChoice(){
-//        ResponseRestaurantDto restaurantDto =
-//                restaurantQueryRepository.getRandomRestaurantChoice();
-//
-//        log.info(restaurantDto.getName());
-//        log.info(restaurantDto.getMenuName());
-//        log.info(restaurantDto.getCategoryName());
-//        log.info(restaurantDto.getImgUrl());
-//        log.info(String.valueOf(restaurantDto.getWishCount()));
-//        log.info(String.valueOf(restaurantDto.getWishState()));
-//    }
+    @Test
+    @DisplayName("랜덤 식당 1개 반환")
+    void getRandomRestaurantChoice(){
+        List<ResponseRestaurantDto> responseRestaurantDtos =
+                restaurantQueryRepository.getRandomRestaurantChoice();
+
+        for(ResponseRestaurantDto restaurantDto : responseRestaurantDtos){
+            log.info(restaurantDto.getName());
+            log.info(restaurantDto.getMenuName());
+            log.info(restaurantDto.getCategoryName());
+            log.info(restaurantDto.getImgUrl());
+            log.info(String.valueOf(restaurantDto.getWishCount()));
+            log.info(String.valueOf(restaurantDto.getWishState()));
+        }
+
+    }
+
+    @Test
+    @DisplayName("검색 식당 조회")
+    void getSearchRestaurant(){
+
+        List<Long> categoryId = new ArrayList<>();
+        categoryId.add(1L);
+        categoryId.add(3L);
+
+
+        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
+
+        HashSet<String> requestId = new HashSet<>();
+        categoryId.forEach(cate -> requestId.add(String.valueOf(cate)));
+
+        List<ResponseSearchRestaurantDto> getCategoryRestaurant = new ArrayList<>();
+
+        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
+            HashSet<String> searchId = new HashSet<>(List.of(restaurantDto.getCategoryId().split(",")));
+
+            if(searchId.containsAll(requestId)){
+                getCategoryRestaurant.add(restaurantDto);
+            }
+        }
+
+        for(ResponseSearchRestaurantDto searchRestaurantDto : getCategoryRestaurant){
+            log.info(searchRestaurantDto.getCategoryId());
+            log.info(searchRestaurantDto.getCategoryName());
+            log.info(searchRestaurantDto.getName());
+            log.info(searchRestaurantDto.getMenuName());
+            log.info(String.valueOf(searchRestaurantDto.getWishCount()));
+            log.info(String.valueOf(searchRestaurantDto.getWishState()));
+            log.info("===========================================");
+
+        }
+    }
 }
