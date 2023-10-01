@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,9 +39,8 @@ public class RestaurantService {
      * 카테고리 별 식당 리스트 조회
      */
     @Transactional
-    public List<ResponseRestaurantDto> getRestaurant(List<Long> categoryId) {
-        categoryId.forEach(category ->
-                categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND)));
+    public List<ResponseRestaurantDto> getRestaurant(Long categoryId) {
+        categoryRepository.findById(categoryId).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
         return restaurantQueryRepository.getRestaurant(categoryId);
     }
 

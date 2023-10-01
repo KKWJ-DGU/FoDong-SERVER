@@ -10,7 +10,7 @@ public interface RestaurantQueryRepository {
 
     List<ResponseRestaurantDto> getRandomRestaurant();
 
-    List<ResponseRestaurantDto> getRestaurant(List<Long> categoryId);
+    List<ResponseRestaurantDto> getRestaurant(Long categoryId);
 
     ResponseRestaurantInfoDto getRestaurantInfo(Long productId);
 

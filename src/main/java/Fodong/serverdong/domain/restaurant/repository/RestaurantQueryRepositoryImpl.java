@@ -10,9 +10,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import static Fodong.serverdong.domain.menu.QMenu.menu;
@@ -65,7 +62,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * 카테고리 별 식당 리스트 조회
      */
     @Override
-    public List<ResponseRestaurantDto> getRestaurant(List<Long> categoryId){
+    public List<ResponseRestaurantDto> getRestaurant(Long categoryId){
         return query
                 .select(Projections.constructor(
                         ResponseRestaurantDto.class,

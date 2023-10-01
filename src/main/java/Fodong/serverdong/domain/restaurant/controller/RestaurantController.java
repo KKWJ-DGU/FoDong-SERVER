@@ -33,7 +33,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "카테고리 별 식당 리스트 조회",description = "카테고리에 해당하는 식당 리스트를 조회합니다.")
     @GetMapping("/category/{categoryId}")
-    public List<ResponseRestaurantDto> getRestaurant(@PathVariable List<Long> categoryId){
+    public List<ResponseRestaurantDto> getRestaurant(@PathVariable Long categoryId){
          return restaurantService.getRestaurant(categoryId);
     }
 
