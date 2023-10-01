@@ -47,9 +47,7 @@ class RestaurantServiceTest {
     @Test
     @DisplayName("카테고리 별 식당 리스트")
     void getRestaurant() {
-        List<Long> categoryId = new ArrayList<>();
-        categoryId.add(1L);
-        categoryId.add(2L);
+        Long categoryId = 3L;
 
         List<ResponseRestaurantDto> restaurantDtoList = restaurantQueryRepository.getRestaurant(categoryId);
 
