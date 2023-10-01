@@ -1,6 +1,5 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
-import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
@@ -8,9 +7,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.LongPredicate;
 
 import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
@@ -164,7 +159,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      */
     public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId){
 
-        List<ResponseSearchRestaurantDto> searchRestaurant = query.select(
+        return query.select(
                         Projections.constructor(
                                 ResponseSearchRestaurantDto.class,
                                 restaurant.name,
@@ -188,24 +183,11 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         ))
                 .from(restaurantCategory)
                 .join(restaurantCategory.restaurant,restaurant)
+                .where(restaurantCategory.category.id.in(categoryId))
                 .distinct()
                 .fetch();
 
 
-        HashSet<String> id = new HashSet<>();
-        categoryId.forEach(cate -> id.add(String.valueOf(cate)));
-
-        List<ResponseSearchRestaurantDto> getSearch = new ArrayList<>();
-
-        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
-            HashSet<String> searchId = new HashSet<>(Arrays.asList(restaurantDto.getCategoryId().split(",")));
-
-            if(searchId.containsAll(id)){
-                getSearch.add(restaurantDto);
-            }
-        }
-        return getSearch;
-
-
     }
+
 }

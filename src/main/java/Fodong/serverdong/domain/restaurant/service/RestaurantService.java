@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -67,6 +70,21 @@ public class RestaurantService {
         categoryId.forEach(category ->
                 categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND)));
 
-        return restaurantQueryRepository.getSearchRestaurant(categoryId);
+        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
+
+        HashSet<String> requestId = new HashSet<>();
+        categoryId.forEach(cate -> requestId.add(String.valueOf(cate)));
+
+        List<ResponseSearchRestaurantDto> getCategoryRestaurant = new ArrayList<>();
+
+        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
+            HashSet<String> searchId = new HashSet<>(List.of(restaurantDto.getCategoryId().split(",")));
+
+            if(searchId.containsAll(requestId)){
+                getCategoryRestaurant.add(restaurantDto);
+            }
+        }
+
+        return getCategoryRestaurant;
     }
 }
