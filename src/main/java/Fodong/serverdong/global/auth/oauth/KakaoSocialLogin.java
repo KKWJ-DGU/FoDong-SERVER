@@ -39,8 +39,9 @@ public class KakaoSocialLogin implements OAuthLogin {
     public ResponseMemberTokenDto getUserInfo(String accessToken) {
         String email = retrieveEmailFromKakao(accessToken);
 
-        Member member = handleMemberAndToken(email);
         boolean isRegistered = memberRepository.findByEmail(email).isPresent();
+
+        Member member = handleMemberAndToken(email);
 
         return new ResponseMemberTokenDto(
                 memberTokenRepository.findByMemberId(member.getId()).orElseThrow().getAccessToken(),
