@@ -25,7 +25,7 @@ public class MemberService {
     public ResponseMemberTokenDto socialUserInfo(String socialType, String code) {
         SocialType type;
         try {
-            type = SocialType.valueOf(socialType.toUpperCase());
+            type = SocialType.valueOf(socialType);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Unsupported social type: " + socialType);
         }
