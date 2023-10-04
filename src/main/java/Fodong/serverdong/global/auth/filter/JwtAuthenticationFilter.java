@@ -80,7 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 reIssueRefreshToken.getToken(), reIssueRefreshToken.getExpiryDate());
         memberTokenRepository.saveAndFlush(memberToken);
 
-        jwtService.sendAccessAndRefreshToken(memberToken.getMember(), response, reIssueAccessToken.getToken(), reIssueRefreshToken.getToken());
+        jwtService.sendAccessAndRefreshToken(response, reIssueAccessToken.getToken(), reIssueRefreshToken.getToken());
     }
 
 

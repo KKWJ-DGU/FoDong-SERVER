@@ -1,7 +1,6 @@
 package Fodong.serverdong.global.auth.service;
 
 import Fodong.serverdong.domain.member.Member;
-import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.dto.response.FilterProcessingTokenDto;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -13,7 +12,6 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +39,6 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Getter
 @Slf4j
 public class JwtService {
 
@@ -64,9 +61,7 @@ public class JwtService {
     private static final String REFRESH_TOKEN = "RefreshToken";
     private static final String USERID_CLAIM = "account_email";
     private static final String BEARER = "Bearer ";
-    private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
-    private static final String AUTHORITIES_KEY = "auth";
 
     private Key secretKeySpec;
 
@@ -79,12 +74,11 @@ public class JwtService {
     /**
      * AccessToken 생성
      * @param email 이메일
+     * @return ResponseTokenDto
      */
     public ResponseTokenDto createAccessToken(String email) {
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expiryDate = now.plusSeconds(accessExpiration);
-
+        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshExpiration);
         Date expiryDateAsDate = java.sql.Timestamp.valueOf(expiryDate);
 
         String token = JWT.create()
@@ -95,6 +89,11 @@ public class JwtService {
 
         return new ResponseTokenDto(token, expiryDate);
     }
+
+    /**
+     * RefreshToken 생성
+     * @return ResponseTokenDto
+     */
 
     public ResponseTokenDto createRefreshToken() {
         LocalDateTime now = LocalDateTime.now();
@@ -115,7 +114,7 @@ public class JwtService {
     /**
      * AccessToken , RefreshToken 보내기
      */
-    public void sendAccessAndRefreshToken(Member member, HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
 
         response.setStatus(SC_OK);
         response.setContentType("application/json");
@@ -205,7 +204,7 @@ public class JwtService {
     @SneakyThrows
     public boolean isTokenValid(String token) {
         try {
-            JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
+            JWT.require(Algorithm.HMAC512(secretKeySpec.getEncoded())).build().verify(token);
             return true;
         } catch (TokenExpiredException e) {
             log.error("Token expired: {}", e.getMessage(), e);
