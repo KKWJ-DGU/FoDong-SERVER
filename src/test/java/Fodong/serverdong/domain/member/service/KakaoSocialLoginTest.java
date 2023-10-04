@@ -36,7 +36,7 @@ class KakaoSocialLoginTest {
     @Autowired
     private KakaoSocialLogin kakaoSocialLogin;
 
-    private static final String kakaoAccessToken = "카카오 인가 토큰";
+    private static final String kakaoAccessToken = "qVBYJfhJd5l0EK01VY4t6OE1Lshl_q87IJIBE1jICiolkAAAAYr5qBec";
 
     @Test
     @DisplayName("카카오 소셜 로그인")

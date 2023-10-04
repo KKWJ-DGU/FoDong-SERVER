@@ -19,6 +19,10 @@ public enum CustomErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     KAKAO_LOGIN_FAILURE(BAD_REQUEST,"카카오 로그인에 실패하였습니다."),
+    KAKAO_RESPONSE_BODY_NULL(HttpStatus.BAD_REQUEST, "카카오 응답이 비어있습니다."),
+    KAKAO_ACCOUNT_MISSING(HttpStatus.BAD_REQUEST, "kakao_account is missing in Kakao response"),
+    UNSUPPORTED_SOCIAL_TYPE(BAD_REQUEST, "지원하지 않는 소셜 타입입니다."),
+    MEMBER_TOKEN_NOT_FOUND(BAD_REQUEST,"해당 회원 토큰이 존재하지 않습니다."),
     UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred");
 
     private final HttpStatus httpStatus;

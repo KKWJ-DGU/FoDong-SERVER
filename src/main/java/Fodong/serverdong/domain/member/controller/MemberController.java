@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/api/member")
 @Tag(name="MemberController",description = "회원 API")
 

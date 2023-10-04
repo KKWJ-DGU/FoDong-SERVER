@@ -4,6 +4,7 @@ import Fodong.serverdong.domain.member.*;
 import Fodong.serverdong.domain.member.enums.SocialType;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.MemberToken;
+import Fodong.serverdong.domain.memberToken.dto.response.TokenInfoDto;
 import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
@@ -17,12 +18,9 @@ import org.json.JSONException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
-public class KakaoSocialLogin implements OAuthLogin {
+public class KakaoSocialLogin{
 
     private final MemberRepository memberRepository;
     private final MemberTokenRepository memberTokenRepository;
@@ -31,21 +29,19 @@ public class KakaoSocialLogin implements OAuthLogin {
     private final WebClient.Builder webClientBuilder;
 
 
-    @Override
+    /**
+     * 사용자 정보 가져오기
+     * @param accessToken 카카오 액세스 토큰
+     * @return ResponseMemberTokenDto
+     */
     public ResponseMemberTokenDto getUserInfo(String accessToken) {
         String email = retrieveEmailFromKakao(accessToken);
-
-        boolean isRegistered = memberRepository.findByEmail(email).isPresent();
-
-        Member member = handleMemberAndToken(email);
-
-        return new ResponseMemberTokenDto(
-                memberTokenRepository.findByMemberId(member.getId()).orElseThrow().getAccessToken(),
-                memberTokenRepository.findByMemberId(member.getId()).orElseThrow().getRefreshToken(),
-                isRegistered
-        );
+        return handleMemberAndToken(email);
     }
 
+    /**
+     * AccessToken으로 사용자 정보 얻기
+     */
     private String retrieveEmailFromKakao(String accessToken) {
         try {
             WebClient webClient = webClientBuilder.baseUrl("https://kapi.kakao.com/v2/user/me").build();
@@ -57,12 +53,12 @@ public class KakaoSocialLogin implements OAuthLogin {
                     .bodyToMono(String.class)
                     .block();
 
-            if (responseBody == null) throw new JSONException("Response body is null");
+            if (responseBody == null) throw new CustomException(CustomErrorCode.KAKAO_RESPONSE_BODY_NULL);
 
             JSONObject jsonObj = new JSONObject(responseBody);
             JSONObject account = jsonObj.optJSONObject("kakao_account");
 
-            if (account == null) throw new JSONException("kakao_account is missing in the response");
+            if (account == null) throw new CustomException(CustomErrorCode.KAKAO_ACCOUNT_MISSING);
 
             return String.valueOf(account.get("email")) + "[" + socialType + "]";
         } catch (JSONException | WebClientResponseException e) {
@@ -70,54 +66,68 @@ public class KakaoSocialLogin implements OAuthLogin {
         }
     }
 
-
-
-    private Member handleMemberAndToken(String email) {
+    /**
+     * 회원 등록 처리
+     */
+    private ResponseMemberTokenDto handleMemberAndToken(String email) {
         ResponseTokenDto accessResponseTokenDto = jwtService.createAccessToken(email);
         ResponseTokenDto refreshResponseTokenDto = jwtService.createRefreshToken();
 
+        TokenInfoDto tokenInfo = new TokenInfoDto(
+                accessResponseTokenDto.getToken(),
+                refreshResponseTokenDto.getToken(),
+                accessResponseTokenDto.getExpiryDate(),
+                refreshResponseTokenDto.getExpiryDate()
+        );
+
         return memberRepository.findByEmail(email)
-                .map(existingMember -> {
-                    handleExistingUserToken(existingMember,
-                            accessResponseTokenDto.getToken(),
-                            refreshResponseTokenDto.getToken(),
-                            accessResponseTokenDto.getExpiryDate(),
-                            refreshResponseTokenDto.getExpiryDate());
-                    return existingMember;
-                })
-                .orElseGet(() -> saveNewMember(
-                        email,
-                        accessResponseTokenDto.getToken(),
-                        refreshResponseTokenDto.getToken(),
-                        accessResponseTokenDto.getExpiryDate(),
-                        refreshResponseTokenDto.getExpiryDate()));
+                .map(existingMember -> handleExistingUserToken(existingMember, tokenInfo))
+                .orElseGet(() -> saveNewMember(email, tokenInfo));
     }
 
-    private void handleExistingUserToken(Member existingMember, String accessToken, String refreshToken, LocalDateTime accessTokenExpiry, LocalDateTime refreshTokenExpiry) {
-        Optional<MemberToken> optionalMemberToken = memberTokenRepository.findByMemberId(existingMember.getId());
-        optionalMemberToken.ifPresent(existingMemberToken -> {
-            existingMemberToken.updateTokens(accessToken, accessTokenExpiry, refreshToken, refreshTokenExpiry);
-            memberTokenRepository.save(existingMemberToken);
-        });
+
+    /**
+     * 기존 가입된 회원 처리
+     */
+    private ResponseMemberTokenDto handleExistingUserToken(Member existingMember, TokenInfoDto tokenInfo) {
+        MemberToken existingMemberToken = memberTokenRepository.findByMemberId(existingMember.getId())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_TOKEN_NOT_FOUND));
+
+        existingMemberToken.updateTokens(tokenInfo.getAccessToken(), tokenInfo.getAccessTokenExpiry(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpiry());
+        memberTokenRepository.save(existingMemberToken);
+
+        return new ResponseMemberTokenDto(
+                tokenInfo.getAccessToken(),
+                tokenInfo.getRefreshToken(),
+                true
+        );
     }
 
-    private Member saveNewMember(String email, String accessToken, String refreshToken, LocalDateTime accessTokenExpiry, LocalDateTime refreshTokenExpiry) {
 
+    /**
+     * 새로운 회원 처리
+     */
+    private ResponseMemberTokenDto saveNewMember(String email, TokenInfoDto tokenInfo) {
         Member newKakaoMember = Member.builder()
                 .email(email)
-                .nickname("Temporary Nickname") // 임시 닉네임 할당
+                .nickname("Temporary Nickname")
                 .build();
         memberRepository.save(newKakaoMember);
 
         MemberToken newMemberToken = MemberToken.builder()
                 .member(newKakaoMember)
-                .accessToken(accessToken)
-                .accessExpiration(accessTokenExpiry)
-                .refreshToken(refreshToken)
-                .refreshExpiration(refreshTokenExpiry)
+                .accessToken(tokenInfo.getAccessToken())
+                .accessExpiration(tokenInfo.getAccessTokenExpiry())
+                .refreshToken(tokenInfo.getRefreshToken())
+                .refreshExpiration(tokenInfo.getRefreshTokenExpiry())
                 .build();
         memberTokenRepository.save(newMemberToken);
 
-        return newKakaoMember;
+        return new ResponseMemberTokenDto(
+                tokenInfo.getAccessToken(),
+                tokenInfo.getRefreshToken(),
+                false
+        );
     }
+
 }
