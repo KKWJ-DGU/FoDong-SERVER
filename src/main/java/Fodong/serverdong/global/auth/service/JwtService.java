@@ -2,8 +2,8 @@ package Fodong.serverdong.global.auth.service;
 
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
-import Fodong.serverdong.global.auth.dto.response.FilterProcessingTokenDto;
-import Fodong.serverdong.global.auth.dto.response.ResponseTokenDto;
+import Fodong.serverdong.domain.memberToken.dto.response.FilterProcessingTokenDto;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
 import com.auth0.jwt.JWT;
@@ -13,7 +13,6 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -28,15 +27,12 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
 import java.util.*;
-import java.util.stream.Collectors;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

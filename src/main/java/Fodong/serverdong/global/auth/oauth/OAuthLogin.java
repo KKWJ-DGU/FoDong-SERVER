@@ -1,7 +1,6 @@
 package Fodong.serverdong.global.auth.oauth;
 
-import Fodong.serverdong.domain.member.Member;
-import Fodong.serverdong.global.auth.dto.response.ResponseMemberTokenDto;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 
 public interface OAuthLogin {
 

@@ -2,8 +2,7 @@ package Fodong.serverdong.domain.member.controller;
 
 import Fodong.serverdong.domain.member.dto.request.SocialLoginRequest;
 import Fodong.serverdong.domain.member.service.MemberService;
-import Fodong.serverdong.global.auth.dto.response.ResponseMemberTokenDto;
-import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

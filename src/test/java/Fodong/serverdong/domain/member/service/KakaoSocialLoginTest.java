@@ -4,7 +4,7 @@ import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.MemberToken;
 import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
-import Fodong.serverdong.global.auth.dto.response.ResponseMemberTokenDto;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import Fodong.serverdong.global.auth.service.JwtService;
 import org.junit.jupiter.api.DisplayName;

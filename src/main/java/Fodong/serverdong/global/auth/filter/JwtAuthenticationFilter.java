@@ -1,11 +1,9 @@
 package Fodong.serverdong.global.auth.filter;
 
-import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.MemberToken;
 import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
-import Fodong.serverdong.global.auth.dto.response.FilterProcessingTokenDto;
-import Fodong.serverdong.global.auth.dto.response.ResponseTokenDto;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
 import Fodong.serverdong.global.auth.service.JwtService;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomErrorResponse;
@@ -13,13 +11,8 @@ import Fodong.serverdong.global.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

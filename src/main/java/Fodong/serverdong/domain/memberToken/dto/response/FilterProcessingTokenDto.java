@@ -1,4 +1,4 @@
-package Fodong.serverdong.global.auth.dto.response;
+package Fodong.serverdong.domain.memberToken.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

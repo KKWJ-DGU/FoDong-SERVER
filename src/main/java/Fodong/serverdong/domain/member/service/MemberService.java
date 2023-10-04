@@ -2,7 +2,7 @@ package Fodong.serverdong.domain.member.service;
 
 import Fodong.serverdong.domain.member.enums.SocialType;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
-import Fodong.serverdong.global.auth.dto.response.ResponseMemberTokenDto;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
