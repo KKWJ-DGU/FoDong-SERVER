@@ -37,4 +37,9 @@ public class MemberController {
         return new ResponseEntity<>(responseMemberTokenDto, HttpStatus.OK);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> testMethod(@AuthenticationPrincipal MemberAdapter memberAdapter) {
+        return ResponseEntity.ok("User details received " + memberAdapter.getUsername());
+    }
+
 }
