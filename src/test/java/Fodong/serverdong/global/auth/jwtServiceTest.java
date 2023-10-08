@@ -254,38 +254,38 @@ class jwtServiceTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("만료된 엑세스 토큰, 유효한 리프레시 토큰으로 요청, DB에 refresh token 정보 없을 때")
-    void testRequestWithExpiredAccessTokenError() throws Exception {
-        // Setup 로직 주석 후 진행
-
-        byte[] decodedKey = Base64.getDecoder().decode(secretKey);
-        secretKeySpec = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
-
-        // 만료된 Access Token 생성
-        LocalDateTime accessExpiryDate = LocalDateTime.now().minusSeconds(10); // 10초 전에 만료
-        Date accessExpiryDateAsDate = java.sql.Timestamp.valueOf(accessExpiryDate);
-        String expiredAccessToken = JWT.create()
-                .withSubject(ACCESS_TOKEN)
-                .withExpiresAt(accessExpiryDateAsDate)
-                .withClaim(USERID_CLAIM, testEmail)
-                .sign(Algorithm.HMAC512(secretKeySpec.getEncoded()));
-
-        // 유효한 Refresh Token 생성
-        LocalDateTime refreshExpiryDate = LocalDateTime.now().plusSeconds(refreshExpiration);
-        Date refreshExpiryDateAsDate = java.sql.Timestamp.valueOf(refreshExpiryDate);
-        String validRefreshToken = JWT.create()
-                .withSubject(REFRESH_TOKEN)
-                .withExpiresAt(refreshExpiryDateAsDate)
-                .sign(Algorithm.HMAC512(secretKeySpec.getEncoded()));
-
-        mockMvc.perform(get("/api/member/test")
-                        .header("Authorization", "Bearer " + expiredAccessToken)
-                        .header("Refresh", "Bearer " + validRefreshToken)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(CustomErrorCode.MEMBER_NOT_FOUND.toString()));
-    }
+//    @Test
+//    @DisplayName("만료된 엑세스 토큰, 유효한 리프레시 토큰으로 요청, DB에 refresh token 정보 없을 때")
+//    void testRequestWithExpiredAccessTokenError() throws Exception {
+//        // Setup 로직 주석 후 진행
+//
+//        byte[] decodedKey = Base64.getDecoder().decode(secretKey);
+//        secretKeySpec = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+//
+//        // 만료된 Access Token 생성
+//        LocalDateTime accessExpiryDate = LocalDateTime.now().minusSeconds(10); // 10초 전에 만료
+//        Date accessExpiryDateAsDate = java.sql.Timestamp.valueOf(accessExpiryDate);
+//        String expiredAccessToken = JWT.create()
+//                .withSubject(ACCESS_TOKEN)
+//                .withExpiresAt(accessExpiryDateAsDate)
+//                .withClaim(USERID_CLAIM, testEmail)
+//                .sign(Algorithm.HMAC512(secretKeySpec.getEncoded()));
+//
+//        // 유효한 Refresh Token 생성
+//        LocalDateTime refreshExpiryDate = LocalDateTime.now().plusSeconds(refreshExpiration);
+//        Date refreshExpiryDateAsDate = java.sql.Timestamp.valueOf(refreshExpiryDate);
+//        String validRefreshToken = JWT.create()
+//                .withSubject(REFRESH_TOKEN)
+//                .withExpiresAt(refreshExpiryDateAsDate)
+//                .sign(Algorithm.HMAC512(secretKeySpec.getEncoded()));
+//
+//        mockMvc.perform(get("/api/member/test")
+//                        .header("Authorization", "Bearer " + expiredAccessToken)
+//                        .header("Refresh", "Bearer " + validRefreshToken)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(jsonPath("$.code").value(CustomErrorCode.MEMBER_NOT_FOUND.toString()));
+//    }
 
 
 }

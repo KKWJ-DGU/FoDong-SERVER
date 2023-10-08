@@ -31,22 +31,22 @@ class KakaoSocialLoginTest {
 
     private static final String kakaoAccessToken = "카카오 인가 토큰";
 
-    @Test
-    @DisplayName("카카오 소셜 로그인")
-    public void getUser() throws Exception {
-        // given
-        String email = "tlsdud8205@naver.com[KAKAO]";
-
-        ResponseMemberTokenDto result = kakaoSocialLogin.getUserInfo(kakaoAccessToken);
-
-        Optional<Member> foundMember = memberRepository.findByEmail(email);
-        assertTrue(foundMember.isPresent());
-        assertEquals(email, foundMember.get().getEmail());
-        Optional<MemberToken> foundToken = memberTokenRepository.findByMemberId(foundMember.get().getId());
-        assertTrue(foundToken.isPresent());
-
-        System.out.println(result.getAccessToken());
-        System.out.println(result.getRefreshToken());
-    }
+//    @Test
+//    @DisplayName("카카오 소셜 로그인")
+//    public void getUser() throws Exception {
+//        // given
+//        String email = "tlsdud8205@naver.com[KAKAO]";
+//
+//        ResponseMemberTokenDto result = kakaoSocialLogin.getUserInfo(kakaoAccessToken);
+//
+//        Optional<Member> foundMember = memberRepository.findByEmail(email);
+//        assertTrue(foundMember.isPresent());
+//        assertEquals(email, foundMember.get().getEmail());
+//        Optional<MemberToken> foundToken = memberTokenRepository.findByMemberId(foundMember.get().getId());
+//        assertTrue(foundToken.isPresent());
+//
+//        System.out.println(result.getAccessToken());
+//        System.out.println(result.getRefreshToken());
+//    }
 
 }

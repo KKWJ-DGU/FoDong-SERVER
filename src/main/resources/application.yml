@@ -1,6 +1,8 @@
 spring:
   profiles:
-    active: dev
+    group:
+      "local": "local, real, dev, jwt"
+      active: real
 
   mvc:
     pathmatch:
