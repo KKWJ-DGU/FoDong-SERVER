@@ -138,7 +138,7 @@ class jwtServiceTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/member/test")
                         .header("Authorization", "Bearer " + newTestMemberToken.getAccessToken()))
                 .andExpect(status().isOk()) // 200 OK
-                .andExpect(content().string("User details received" + testEmail));
+                .andExpect(content().string("User details received " + testEmail));
 
     }
 

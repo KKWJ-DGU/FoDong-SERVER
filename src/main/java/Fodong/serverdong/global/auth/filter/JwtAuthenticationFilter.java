@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 TokenStatus refreshTokenStatus = jwtService.isRefreshTokenValid(refreshToken);
                 if (refreshTokenStatus == TokenStatus.VALID) {
                     jwtService.checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-                    break;
+                    return;
                 }
         }
         filterChain.doFilter(request, response);
