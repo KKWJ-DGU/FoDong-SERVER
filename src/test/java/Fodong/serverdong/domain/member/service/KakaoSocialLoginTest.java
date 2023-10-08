@@ -6,7 +6,6 @@ import Fodong.serverdong.domain.memberToken.MemberToken;
 import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
-import Fodong.serverdong.global.auth.service.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +27,9 @@ class KakaoSocialLoginTest {
     private MemberTokenRepository memberTokenRepository;
 
     @Autowired
-    private JwtService jwtService;
-
-    @Autowired
     private KakaoSocialLogin kakaoSocialLogin;
 
-    private static final String kakaoAccessToken = "qVBYJfhJd5l0EK01VY4t6OE1Lshl_q87IJIBE1jICiolkAAAAYr5qBec";
+    private static final String kakaoAccessToken = "카카오 인가 토큰";
 
     @Test
     @DisplayName("카카오 소셜 로그인")
