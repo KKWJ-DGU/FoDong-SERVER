@@ -9,6 +9,8 @@ import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
 import Fodong.serverdong.global.auth.enums.TokenStatus;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
+import Fodong.serverdong.global.auth.adapter.MemberAdapter;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -153,9 +155,10 @@ public class JwtService {
 
         DecodedJWT decodedJWT = parseClaims(accessToken);
 
-        Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
-
-        UserDetails principal = new User(decodedJWT.getSubject(), "", authorities);
+        String email = decodedJWT.getClaim(USERID_CLAIM).asString();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
+        UserDetails principal = new MemberAdapter(member);
 
         return new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
     }
