@@ -26,13 +26,16 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String LOGIN_URL = "/api/member/login/oauth";
+    private static final String SWAGGER_UI_URL = "fodong/swagger-ui/index.html";
     private final JwtService jwtService;
     private final MemberTokenRepository memberTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if(request.getRequestURI().contains(LOGIN_URL)){
+        String requestURI = request.getRequestURI();
+
+        if(requestURI.contains(LOGIN_URL) || requestURI.contains(SWAGGER_UI_URL)){
             filterChain.doFilter(request,response);
             return;
         }
