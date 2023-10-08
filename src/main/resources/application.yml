@@ -1,7 +1,7 @@
 spring:
   profiles:
     group:
-      "local": "local, real, dev, jwt"
+      "local": "local, real, jwt"
       active: real
 
   mvc:
