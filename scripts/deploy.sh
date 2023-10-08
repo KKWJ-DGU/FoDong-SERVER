@@ -25,7 +25,7 @@ echo "> $JAR_NAME 실행 권한 추가"
 chmod +x $JAR_NAME
 
 nohup java -jar \
-  -Dspring.config.location=classpath:/application.yml,$REPOSITORY/src/main/resources/application-real.yml \
+  -Dspring.config.location=classpath:/application.yml,$REPOSITORY/src/main/resources/application-real.yml,$REPOSITORY/src/main/resources/application-jwt.yml \
   -Dspring.yml.active=real \
   $JAR_NAME > nohup.out 2>&1 &
 
