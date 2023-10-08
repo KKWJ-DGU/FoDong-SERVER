@@ -37,5 +37,11 @@ public class MemberToken {
     @Column(name = "refresh_expiration" , nullable = false)
     private LocalDateTime refreshExpiration;
 
+    public void updateTokens(String newAccessToken, LocalDateTime newAccessExpiration, String newRefreshToken, LocalDateTime newRefreshExpiration) {
+        this.accessToken = newAccessToken;
+        this.accessExpiration = newAccessExpiration;
+        this.refreshToken = newRefreshToken;
+        this.refreshExpiration = newRefreshExpiration;
+    }
 
 }
