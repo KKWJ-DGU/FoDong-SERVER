@@ -26,7 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String LOGIN_URL = "/api/member/login/oauth";
-    private static final String SWAGGER_UI_URL = "/fodong/swagger-ui/index.html";
+    private static final String SWAGGER_UI_URL = "/fodong/swagger-ui";
     private final JwtService jwtService;
     private final MemberTokenRepository memberTokenRepository;
 
