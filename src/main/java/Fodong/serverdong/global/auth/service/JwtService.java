@@ -1,12 +1,17 @@
 package Fodong.serverdong.global.auth.service;
 
 import Fodong.serverdong.domain.member.Member;
+import Fodong.serverdong.domain.member.repository.MemberRepository;
+import Fodong.serverdong.domain.memberToken.MemberToken;
 import Fodong.serverdong.domain.memberToken.dto.response.FilterProcessingTokenDto;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
+import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
+import Fodong.serverdong.global.auth.enums.TokenStatus;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -18,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -31,9 +35,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.util.StringUtils;
+
 import static javax.servlet.http.HttpServletResponse.*;
 import java.time.LocalDateTime;
 
@@ -62,6 +67,8 @@ public class JwtService {
     private static final String USERID_CLAIM = "account_email";
     private static final String BEARER = "Bearer ";
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
+    private final MemberTokenRepository memberTokenRepository;
 
     private Key secretKeySpec;
 
@@ -78,7 +85,7 @@ public class JwtService {
      */
     public ResponseTokenDto createAccessToken(String email) {
 
-        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshExpiration);
+        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(accessExpiration);
         Date expiryDateAsDate = java.sql.Timestamp.valueOf(expiryDate);
 
         String token = JWT.create()
@@ -96,9 +103,7 @@ public class JwtService {
      */
 
     public ResponseTokenDto createRefreshToken() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expiryDate = now.plusSeconds(refreshExpiration);
-
+        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshExpiration);
         Date expiryDateAsDate = java.sql.Timestamp.valueOf(expiryDate);
 
         String token = JWT.create()
@@ -109,7 +114,22 @@ public class JwtService {
         return new ResponseTokenDto(token, expiryDate);
     }
 
+    /**
+     * RefreshToken으로 Token update
+     */
+    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) throws IOException {
+        MemberToken memberToken = memberTokenRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
 
+        ResponseTokenDto reIssueRefreshToken = createRefreshToken();
+        ResponseTokenDto reIssueAccessToken = createAccessToken(memberToken.getMember().getEmail());
+
+        memberToken.updateTokens(reIssueAccessToken.getToken(), reIssueAccessToken.getExpiryDate(),
+                reIssueRefreshToken.getToken(), reIssueRefreshToken.getExpiryDate());
+        memberTokenRepository.saveAndFlush(memberToken);
+
+        sendAccessAndRefreshToken(response, reIssueAccessToken.getToken(), reIssueRefreshToken.getToken());
+    }
 
     /**
      * AccessToken , RefreshToken 보내기
@@ -137,10 +157,8 @@ public class JwtService {
 
         UserDetails principal = new User(decodedJWT.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
     }
-
-
 
     /**
      * 액세스 토큰에서 Claims를 파싱
@@ -149,7 +167,7 @@ public class JwtService {
      */
     private DecodedJWT parseClaims(String accessToken) {
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC512(secretKeySpec.getEncoded())).build();
             return verifier.verify(accessToken);
         } catch (TokenExpiredException e) {
             log.error("Token expired: {}", e.getMessage(), e);
@@ -160,60 +178,70 @@ public class JwtService {
         }
     }
 
+    /**
+     * 헤더에서 AccessToken 추출
+     */
+    public String extractAccessToken(HttpServletRequest request) {
+
+        String accessToken = request.getHeader(accessHeader);
+        if (StringUtils.hasText(accessToken) && accessToken.startsWith(BEARER)) {
+            return accessToken.replace(BEARER, "");
+        }
+        return null;
+    }
 
     /**
      * 헤더에서 RefreshToken 추출
      */
-    public Optional<String> extractRefreshToken(HttpServletRequest request) {
+    public String extractRefreshToken(HttpServletRequest request) {
 
-        return Optional.ofNullable(request.getHeader(refreshHeader))
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
-
-
+        String refreshToken = request.getHeader(refreshHeader);
+        if (StringUtils.hasText(refreshToken) && refreshToken.startsWith(BEARER)) {
+            return refreshToken.replace(BEARER, "");
+        }
+        return null;
     }
-
-    /**
-     * 헤더에서 AccessToken 추출
-     */
-    public Optional<String> extractAccessToken(HttpServletRequest request) {
-
-
-        return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(accessToken -> accessToken.startsWith(BEARER))
-                .map(accessToken -> accessToken.replace(BEARER, ""));
-
-
-    }
-
-    /**
-     * AccessToken에서 Email추출
-     */
-    public Optional<String> extractUserEmail(String accessToken) {
-        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                .build()
-                .verify(accessToken)
-                .getClaim(USERID_CLAIM)
-                .asString());
-    }
-
 
     /**
      * 토큰 유효성 검사
      */
     @SneakyThrows
-    public boolean isTokenValid(String token) {
+    public TokenStatus isAccessTokenValid(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secretKeySpec.getEncoded())).build().verify(token);
-            return true;
+            return TokenStatus.VALID;
         } catch (TokenExpiredException e) {
-            log.error("Token expired: {}", e.getMessage(), e);
-            throw new CustomException(CustomErrorCode.TOKEN_EXPIRED);
+            log.error("토큰이 만료되었습니다.", e.getMessage(), e);
+            return TokenStatus.EXPIRED;
+        } catch (JWTDecodeException e) {
+            log.error("JWT 토큰 디코딩 중 오류가 발생하였습니다.", e.getMessage(), e);
+            throw e;
+        } catch (NoSuchElementException e) {
+            log.error("사용자를 찾을 수 없습니다.");
+            throw e;
         } catch (Exception e) {
-            log.error("Unexpected error occurred while validating token: {}", e.getMessage(), e);
-            throw new CustomException(CustomErrorCode.UNEXPECTED_ERROR);
+            log.error("예기치 않은 오류가 발생하였습니다. : {}", e.getMessage(), e);
+            throw e;
         }
     }
-
+    @SneakyThrows
+    public TokenStatus isRefreshTokenValid(String token) {
+        try {
+            JWT.require(Algorithm.HMAC512(secretKeySpec.getEncoded())).build().verify(token);
+            return TokenStatus.VALID;
+        } catch (TokenExpiredException e) {
+            log.error("토큰이 만료되었습니다.", e.getMessage(), e);
+            throw e;
+        } catch (JWTDecodeException e) {
+            log.error("JWT 토큰 디코딩 중 오류가 발생하였습니다.", e.getMessage(), e);
+            throw e;
+        } catch (NoSuchElementException e) {
+            log.error("사용자를 찾을 수 없습니다.");
+            throw e;
+        } catch (Exception e) {
+            log.error("예기치 않은 오류가 발생하였습니다. : {}", e.getMessage(), e);
+            throw e;
+        }
+    }
 
 }
