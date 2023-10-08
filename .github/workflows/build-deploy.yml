@@ -36,6 +36,11 @@ jobs:
         run : chmod +x ./gradlew
         shell : bash
 
+      - name: Set jwt YML
+        run: |
+          touch ./src/main/resources/application-jwt.yml
+          echo "${{ secrets.APPLICATION_JWT_YML }}" | base64 --decode > src/main/resources/application-jwt.yml
+
       - name: Build and Test
         run: ./gradlew build test
 
@@ -44,10 +49,7 @@ jobs:
           touch ./src/main/resources/application-real.yml
           echo "${{ secrets.APPLICATION_REAL_YML }}" | base64 --decode > src/main/resources/application-real.yml
 
-      - name : Set jwt YML
-        run : |
-          touch ./src/main/resources/application-jwt.yml
-          echo "${{ secrets.APPLICATION_JWT_YML }}" | base64 --decode > src/main/resources/application-jwt.yml
+
       #---------------------------------------------------
 
       - name : Make Directory for deliver
