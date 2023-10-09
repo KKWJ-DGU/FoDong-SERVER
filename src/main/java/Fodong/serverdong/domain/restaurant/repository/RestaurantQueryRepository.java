@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RestaurantQueryRepository {
 
-    List<ResponseRestaurantDto> getRandomRestaurant();
+    List<ResponseRestaurantDto> getRandomRestaurant(Long memberId);
 
     List<ResponseRestaurantDto> getRestaurant(Long categoryId);
 

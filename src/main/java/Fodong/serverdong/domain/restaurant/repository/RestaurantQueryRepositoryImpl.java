@@ -31,7 +31,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * 랜덤 식당 리스트 조회
      */
     @Override
-    public List<ResponseRestaurantDto> getRandomRestaurant(){
+    public List<ResponseRestaurantDto> getRandomRestaurant(Long memberId){
 
         return query.
                 select(Projections.constructor(
@@ -49,7 +49,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                 JPAExpressions.select(restaurant.id)
                                         .from(restaurant)
                                         .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
-                                        .where(wishlist.member.id.eq(1L))
+                                        .where(wishlist.member.id.eq(memberId))
                         )
                 ))
                 .from(restaurant)
