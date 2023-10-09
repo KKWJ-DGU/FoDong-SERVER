@@ -5,6 +5,7 @@ import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.MemberToken;
 import Fodong.serverdong.domain.memberToken.dto.response.FilterProcessingTokenDto;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
+import Fodong.serverdong.domain.memberToken.repository.MemberTokenQueryRepository;
 import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
 import Fodong.serverdong.global.auth.enums.TokenStatus;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -71,6 +72,7 @@ public class JwtService {
     private final ObjectMapper objectMapper;
     private final MemberRepository memberRepository;
     private final MemberTokenRepository memberTokenRepository;
+    private final MemberTokenQueryRepository memberTokenQueryRepository;
 
     private Key secretKeySpec;
 
@@ -123,8 +125,14 @@ public class JwtService {
         MemberToken memberToken = memberTokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
 
+        String memberEmail = memberTokenQueryRepository.findEmailByRefreshToken(refreshToken);
+
+        if (memberEmail == null) {
+            throw new CustomException(CustomErrorCode.MEMBER_NOT_FOUND);
+        }
+
         ResponseTokenDto reIssueRefreshToken = createRefreshToken();
-        ResponseTokenDto reIssueAccessToken = createAccessToken(memberToken.getMember().getEmail());
+        ResponseTokenDto reIssueAccessToken = createAccessToken(memberEmail);
 
         memberToken.updateTokens(reIssueAccessToken.getToken(), reIssueAccessToken.getExpiryDate(),
                 reIssueRefreshToken.getToken(), reIssueRefreshToken.getExpiryDate());
