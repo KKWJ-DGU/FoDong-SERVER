@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.member.service;
 
+import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.enums.SocialType;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
@@ -40,6 +41,32 @@ public class MemberService {
             default:
                 throw new CustomException(CustomErrorCode.UNSUPPORTED_SOCIAL_TYPE);
         }
+    }
+
+    /**
+     * 닉네임 설정
+     * @param userEmail 현재 유저의 아이디 또는 이름
+     * @param nickname 설정하려는 닉네임
+     */
+    public void setNickname(String userEmail, String nickname) {
+        if (isNicknameDuplicate(nickname)) {
+            throw new CustomException(CustomErrorCode.MEMBER_DUPLICATED_NICKNAME);
+        }
+
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        member.updateNickname(nickname);
+        memberRepository.save(member);
+    }
+
+    /**
+     * 닉네임 중복 검사
+     * @param nickname 검사하려는 닉네임
+     * @return 중복 여부
+     */
+    private boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.findByNickname(nickname).isPresent();
     }
 
 }

@@ -42,4 +42,14 @@ public class MemberController {
         return ResponseEntity.ok("User details received " + memberAdapter.getUsername());
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "닉네임 설정", description = "닉네임이 사용 가능한 경우 설정합니다.")
+    @PatchMapping("/nickname/{nickname}")
+    public ResponseEntity<String> setNickname(@PathVariable String nickname, @AuthenticationPrincipal MemberAdapter memberAdapter) {
+        memberService.setNickname(memberAdapter.getUsername(), nickname);
+        return ResponseEntity.ok("닉네임이 성공적으로 설정되었습니다.");
+    }
+
+
+
 }
