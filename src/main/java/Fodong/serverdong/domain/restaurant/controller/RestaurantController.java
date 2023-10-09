@@ -47,7 +47,9 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "식당 정보 조회" , description = "식당 정보를 조회합니다.")
     @GetMapping("/info/{restaurantId}")
-    public ResponseRestaurantInfoDto getRestaurantInfo(@PathVariable Long restaurantId){
+    public ResponseRestaurantInfoDto getRestaurantInfo(@PathVariable Long restaurantId , @AuthenticationPrincipal MemberAdapter memberAdapter){
+
+        Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRestaurantInfo(restaurantId);
     }
 
