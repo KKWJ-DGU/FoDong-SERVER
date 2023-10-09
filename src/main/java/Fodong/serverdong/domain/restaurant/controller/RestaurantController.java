@@ -2,6 +2,7 @@ package Fodong.serverdong.domain.restaurant.controller;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
+import Fodong.serverdong.global.auth.adapter.MemberAdapter;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
@@ -9,6 +10,7 @@ import Fodong.serverdong.domain.restaurant.service.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +28,11 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "랜덤 식당 리스트 조회", description = "랜덤으로 식당 리스트를 조회합니다.")
     @GetMapping("/random")
-    public List<ResponseRestaurantDto> getRandomRestaurant(){
-        return restaurantService.getRandomRestaurant();
+    public List<ResponseRestaurantDto> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
+
+        Long memberId = memberAdapter.getMember().getId();
+
+        return restaurantService.getRandomRestaurant(memberId);
     }
 
     @ApiDocumentResponse
