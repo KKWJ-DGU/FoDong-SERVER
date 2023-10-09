@@ -23,5 +23,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "email" , nullable = false)
     private String email;
 
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
 }
 
