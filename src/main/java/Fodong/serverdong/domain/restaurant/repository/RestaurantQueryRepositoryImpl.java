@@ -190,10 +190,4 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
 
     }
 
-    public Long getCategoryId(){
-        return query.select(category.id)
-                .from(category)
-                .fetchOne();
-    }
-
 }

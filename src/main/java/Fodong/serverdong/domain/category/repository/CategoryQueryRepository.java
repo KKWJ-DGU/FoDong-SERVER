@@ -7,4 +7,6 @@ import java.util.List;
 public interface CategoryQueryRepository {
 
     List<ResponseCategoryListDto> getCategoryList();
+
+    Long getCategoryId();
 }
