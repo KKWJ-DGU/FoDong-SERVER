@@ -95,7 +95,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * @param restaurantId 식당 ID
      */
     @Override
-    public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId){
+    public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId){
         return query.select(Projections.constructor(
                 ResponseRestaurantInfoDto.class,
                 restaurant.name,
@@ -113,7 +113,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         JPAExpressions.select(restaurant.id)
                                 .from(restaurant)
                                 .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
-                                .where(wishlist.member.id.eq(1L))
+                                .where(wishlist.member.id.eq(memberId))
                 )))
                 .from(restaurant)
                 .where(restaurant.id.eq(restaurantId))

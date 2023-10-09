@@ -50,7 +50,7 @@ public class RestaurantController {
     public ResponseRestaurantInfoDto getRestaurantInfo(@PathVariable Long restaurantId , @AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
-        return restaurantService.getRestaurantInfo(restaurantId);
+        return restaurantService.getRestaurantInfo(restaurantId,memberId);
     }
 
     @ApiDocumentResponse
