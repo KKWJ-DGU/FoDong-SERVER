@@ -34,6 +34,6 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
     public Long getCategoryId(){
         return query.select(category.id)
                 .from(category)
-                .fetchOne();
+                .fetchFirst();
     }
 }
