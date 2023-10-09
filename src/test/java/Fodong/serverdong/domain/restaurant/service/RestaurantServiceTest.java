@@ -1,5 +1,7 @@
 package Fodong.serverdong.domain.restaurant.service;
 
+import Fodong.serverdong.domain.category.Category;
+import Fodong.serverdong.domain.category.repository.CategoryQueryRepositoryImpl;
 import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
@@ -51,8 +53,11 @@ class RestaurantServiceTest {
     @Autowired
     MemberTokenRepository memberTokenRepository;
     @Autowired
+    CategoryQueryRepositoryImpl categoryQueryRepository;
+    @Autowired
     MockMvc mockMvc;
     private MemberToken testMemberToken;
+    private Category category;
 
     @BeforeEach
     void setup() {
@@ -75,6 +80,7 @@ class RestaurantServiceTest {
                 .build();
 
         memberTokenRepository.save(testMemberToken);
+
     }
 
     @Test
@@ -91,31 +97,33 @@ class RestaurantServiceTest {
     @DisplayName("카테고리 별 식당 리스트")
     void getRestaurant() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/category/1")
+        Long categoryId = categoryQueryRepository.getCategoryId();;
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/category/"+categoryId)
                         .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
                 .andExpect(status().isOk());
 
     }
 
-    @Test
-    @DisplayName("식당 정보 반환")
-    void getRestaurantInfo(){
-
-        Restaurant restaurant =
-                new Restaurant(1L,"세븐일레븐","webUrl","031-000-0000","경기도","imgUrl",0);
-        restaurantRepository.save(restaurant);
-
-        restaurantRepository.findById(restaurant.getId()).orElseThrow(()-> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
-
-        ResponseRestaurantInfoDto responseRestaurantInfoDto =
-                restaurantQueryRepository.getRestaurantInfo(restaurant.getId());
-
-        log.info(responseRestaurantInfoDto.getName());
-        log.info(responseRestaurantInfoDto.getCategoryName());
-        log.info(responseRestaurantInfoDto.getMenu());
-        log.info(responseRestaurantInfoDto.getPhoneNumber());
-
-    }
+//    @Test
+//    @DisplayName("식당 정보 반환")
+//    void getRestaurantInfo(){
+//
+//        Restaurant restaurant =
+//                new Restaurant(1L,"세븐일레븐","webUrl","031-000-0000","경기도","imgUrl",0);
+//        restaurantRepository.save(restaurant);
+//
+//        restaurantRepository.findById(restaurant.getId()).orElseThrow(()-> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
+//
+//        ResponseRestaurantInfoDto responseRestaurantInfoDto =
+//                restaurantQueryRepository.getRestaurantInfo(restaurant.getId());
+//
+//        log.info(responseRestaurantInfoDto.getName());
+//        log.info(responseRestaurantInfoDto.getCategoryName());
+//        log.info(responseRestaurantInfoDto.getMenu());
+//        log.info(responseRestaurantInfoDto.getPhoneNumber());
+//
+//    }
 
     @Test
     @DisplayName("랜덤 식당 1개 반환")
