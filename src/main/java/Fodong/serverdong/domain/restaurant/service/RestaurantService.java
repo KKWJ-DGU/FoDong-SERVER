@@ -39,9 +39,10 @@ public class RestaurantService {
      * 카테고리 별 식당 리스트 조회
      */
     @Transactional
-    public List<ResponseRestaurantDto> getRestaurant(Long categoryId) {
+    public List<ResponseRestaurantDto> getRestaurant(Long categoryId,Long memberId) {
+
         categoryRepository.findById(categoryId).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
-        return restaurantQueryRepository.getRestaurant(categoryId);
+        return restaurantQueryRepository.getRestaurant(categoryId,memberId);
     }
 
     /**

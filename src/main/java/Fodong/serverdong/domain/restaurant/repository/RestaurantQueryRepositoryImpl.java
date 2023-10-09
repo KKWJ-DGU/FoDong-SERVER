@@ -62,7 +62,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * 카테고리 별 식당 리스트 조회
      */
     @Override
-    public List<ResponseRestaurantDto> getRestaurant(Long categoryId){
+    public List<ResponseRestaurantDto> getRestaurant(Long categoryId,Long memberId){
         return query
                 .select(Projections.constructor(
                         ResponseRestaurantDto.class,
