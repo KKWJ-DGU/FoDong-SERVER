@@ -1,28 +1,43 @@
 package Fodong.serverdong.domain.restaurant.service;
 
 import Fodong.serverdong.domain.category.repository.CategoryRepository;
+import Fodong.serverdong.domain.member.Member;
+import Fodong.serverdong.domain.member.repository.MemberRepository;
+import Fodong.serverdong.domain.memberToken.MemberToken;
+import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
+import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
+import Fodong.serverdong.global.auth.service.JwtService;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @Slf4j
 @Transactional
+@AutoConfigureMockMvc
 class RestaurantServiceTest {
 
     @Autowired
@@ -31,20 +46,45 @@ class RestaurantServiceTest {
     RestaurantQueryRepositoryImpl restaurantQueryRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    JwtService jwtService;
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    MockMvc mockMvc;
+    private MemberToken testMemberToken;
+    @BeforeEach
+    void setup() {
+        Member testMember = Member.builder()
+                .email("codms7020")
+                .nickname("Test Nickname")
+                .build();
+
+        memberRepository.save(testMember);
+
+        ResponseTokenDto accessTokenDto = jwtService.createAccessToken(testMember.getEmail());
+        ResponseTokenDto refreshTokenDto = jwtService.createRefreshToken();
+
+        testMemberToken = MemberToken.builder()
+                .member(testMember)
+                .accessToken(accessTokenDto.getToken())
+                .accessExpiration(accessTokenDto.getExpiryDate())
+                .refreshToken(refreshTokenDto.getToken())
+                .refreshExpiration(refreshTokenDto.getExpiryDate())
+                .build();
+
+
+    }
 
     @Test
     @DisplayName("랜덤 식당 리스트")
-    void getRandomRestaurant() {
-        List<ResponseRestaurantDto> randomRestaurantDtoList =restaurantQueryRepository.getRandomRestaurant();
+    void getRandomRestaurant() throws Exception {
 
-        for(ResponseRestaurantDto randomRestaurantDto : randomRestaurantDtoList){
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/random")
+                .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
+                .andExpect(status().isOk());
 
-            log.info(randomRestaurantDto.getName());
-            log.info(randomRestaurantDto.getCategoryName());
-            log.info(randomRestaurantDto.getMenuName());
-            log.info(randomRestaurantDto.getWishState().toString());
-            log.info("===========================================");
-        }
     }
 
     @Test
