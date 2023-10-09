@@ -110,7 +110,7 @@ public class KakaoSocialLogin{
     private ResponseMemberTokenDto saveNewMember(String email, TokenInfoDto tokenInfo) {
         Member newKakaoMember = Member.builder()
                 .email(email)
-                .nickname("Temporary Nickname")
+                .nickname(email)
                 .build();
         memberRepository.save(newKakaoMember);
 
