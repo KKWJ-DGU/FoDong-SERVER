@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -50,10 +48,12 @@ class RestaurantServiceTest {
     JwtService jwtService;
     @Autowired
     MemberRepository memberRepository;
-
+    @Autowired
+    MemberTokenRepository memberTokenRepository;
     @Autowired
     MockMvc mockMvc;
     private MemberToken testMemberToken;
+
     @BeforeEach
     void setup() {
         Member testMember = Member.builder()
@@ -74,7 +74,7 @@ class RestaurantServiceTest {
                 .refreshExpiration(refreshTokenDto.getExpiryDate())
                 .build();
 
-
+        memberTokenRepository.save(testMemberToken);
     }
 
     @Test
@@ -82,26 +82,18 @@ class RestaurantServiceTest {
     void getRandomRestaurant() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/random")
-                .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
+                        .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
                 .andExpect(status().isOk());
 
     }
 
     @Test
     @DisplayName("카테고리 별 식당 리스트")
-    void getRestaurant() {
-        Long categoryId = 3L;
+    void getRestaurant() throws Exception {
 
-        List<ResponseRestaurantDto> restaurantDtoList = restaurantQueryRepository.getRestaurant(categoryId);
-
-        for(ResponseRestaurantDto restaurantDto : restaurantDtoList){
-
-            log.info(restaurantDto.getName());
-            log.info(restaurantDto.getCategoryName());
-            log.info(restaurantDto.getMenuName());
-            log.info(restaurantDto.getWishState().toString());
-            log.info("===========================================");
-        }
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/category/1")
+                        .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
+                .andExpect(status().isOk());
 
     }
 
