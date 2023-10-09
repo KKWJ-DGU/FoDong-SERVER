@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static Fodong.serverdong.domain.category.QCategory.category;
 import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
@@ -155,6 +156,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
     /**
      * 검색 식당 조회
      */
+    @Override
     public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId){
 
         return query.select(
@@ -186,6 +188,12 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 .fetch();
 
 
+    }
+
+    public Long getCategoryId(){
+        return query.select(category.id)
+                .from(category)
+                .fetchOne();
     }
 
 }
