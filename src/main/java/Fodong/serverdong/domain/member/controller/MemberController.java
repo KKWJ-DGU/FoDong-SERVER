@@ -37,11 +37,6 @@ public class MemberController {
         return new ResponseEntity<>(responseMemberTokenDto, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> testMethod(@AuthenticationPrincipal MemberAdapter memberAdapter) {
-        return ResponseEntity.ok("User details received " + memberAdapter.getUsername());
-    }
-
 
     @ApiDocumentResponse
     @Operation(summary = "닉네임 설정", description = "닉네임이 사용 가능한 경우 설정합니다.")
