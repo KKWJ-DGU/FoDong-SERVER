@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.member.controller;
 
+import Fodong.serverdong.domain.member.dto.request.RequestMemberNicknameDto;
 import Fodong.serverdong.domain.member.service.MemberService;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.global.auth.adapter.MemberAdapter;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 @Tag(name="MemberController",description = "회원 API")
-
 public class MemberController {
 
     private final MemberService memberService;
@@ -41,5 +41,16 @@ public class MemberController {
     public ResponseEntity<?> testMethod(@AuthenticationPrincipal MemberAdapter memberAdapter) {
         return ResponseEntity.ok("User details received " + memberAdapter.getUsername());
     }
+
+
+    @ApiDocumentResponse
+    @Operation(summary = "닉네임 설정", description = "닉네임이 사용 가능한 경우 설정합니다.")
+    @PatchMapping("/nickname")
+    public ResponseEntity<String> setNickname(@RequestBody RequestMemberNicknameDto nicknameDto, @AuthenticationPrincipal MemberAdapter memberAdapter) {
+        memberService.setNickname(memberAdapter.getUsername(), nicknameDto.getNickname());
+        return ResponseEntity.ok("닉네임이 성공적으로 설정되었습니다.");
+    }
+
+
 
 }
