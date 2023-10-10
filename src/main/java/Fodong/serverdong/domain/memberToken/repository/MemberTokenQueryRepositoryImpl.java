@@ -22,9 +22,9 @@ public class MemberTokenQueryRepositoryImpl implements MemberTokenQueryRepositor
      */
     @Override
     public String findEmailByRefreshToken(String refreshToken) {
-        return query.select(member.email)
+        return query
+                .select(memberToken.member.email)
                 .from(memberToken)
-                .join(memberToken.member, member)
                 .where(memberToken.refreshToken.eq(refreshToken))
                 .fetchOne();
     }
