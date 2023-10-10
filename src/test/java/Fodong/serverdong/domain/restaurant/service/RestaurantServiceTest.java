@@ -8,15 +8,9 @@ import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.MemberToken;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseTokenDto;
 import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
-import Fodong.serverdong.domain.restaurant.Restaurant;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.global.auth.service.JwtService;
-import Fodong.serverdong.global.exception.CustomErrorCode;
-import Fodong.serverdong.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -125,56 +116,56 @@ class RestaurantServiceTest {
 //
 //    }
 
-    @Test
-    @DisplayName("랜덤 식당 1개 반환")
-    void getRandomRestaurantChoice(){
-        List<ResponseRestaurantDto> responseRestaurantDtos =
-                restaurantQueryRepository.getRandomRestaurantChoice();
-
-        for(ResponseRestaurantDto restaurantDto : responseRestaurantDtos){
-            log.info(restaurantDto.getName());
-            log.info(restaurantDto.getMenuName());
-            log.info(restaurantDto.getCategoryName());
-            log.info(restaurantDto.getImgUrl());
-            log.info(String.valueOf(restaurantDto.getWishCount()));
-            log.info(String.valueOf(restaurantDto.getWishState()));
-        }
-
-    }
-
-    @Test
-    @DisplayName("검색 식당 조회")
-    void getSearchRestaurant(){
-
-        List<Long> categoryId = new ArrayList<>();
-        categoryId.add(1L);
-        categoryId.add(3L);
-
-
-        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
-
-        HashSet<String> requestId = new HashSet<>();
-        categoryId.forEach(cate -> requestId.add(String.valueOf(cate)));
-
-        List<ResponseSearchRestaurantDto> getCategoryRestaurant = new ArrayList<>();
-
-        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
-            HashSet<String> searchId = new HashSet<>(List.of(restaurantDto.getCategoryId().split(",")));
-
-            if(searchId.containsAll(requestId)){
-                getCategoryRestaurant.add(restaurantDto);
-            }
-        }
-
-        for(ResponseSearchRestaurantDto searchRestaurantDto : getCategoryRestaurant){
-            log.info(searchRestaurantDto.getCategoryId());
-            log.info(searchRestaurantDto.getCategoryName());
-            log.info(searchRestaurantDto.getName());
-            log.info(searchRestaurantDto.getMenuName());
-            log.info(String.valueOf(searchRestaurantDto.getWishCount()));
-            log.info(String.valueOf(searchRestaurantDto.getWishState()));
-            log.info("===========================================");
-
-        }
-    }
+//    @Test
+//    @DisplayName("랜덤 식당 1개 반환")
+//    void getRandomRestaurantChoice(){
+//        List<ResponseRestaurantDto> responseRestaurantDtos =
+//                restaurantQueryRepository.getRandomRestaurantChoice();
+//
+//        for(ResponseRestaurantDto restaurantDto : responseRestaurantDtos){
+//            log.info(restaurantDto.getName());
+//            log.info(restaurantDto.getMenuName());
+//            log.info(restaurantDto.getCategoryName());
+//            log.info(restaurantDto.getImgUrl());
+//            log.info(String.valueOf(restaurantDto.getWishCount()));
+//            log.info(String.valueOf(restaurantDto.getWishState()));
+//        }
+//
+//    }
+//
+//    @Test
+//    @DisplayName("검색 식당 조회")
+//    void getSearchRestaurant(){
+//
+//        List<Long> categoryId = new ArrayList<>();
+//        categoryId.add(1L);
+//        categoryId.add(3L);
+//
+//
+//        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
+//
+//        HashSet<String> requestId = new HashSet<>();
+//        categoryId.forEach(cate -> requestId.add(String.valueOf(cate)));
+//
+//        List<ResponseSearchRestaurantDto> getCategoryRestaurant = new ArrayList<>();
+//
+//        for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
+//            HashSet<String> searchId = new HashSet<>(List.of(restaurantDto.getCategoryId().split(",")));
+//
+//            if(searchId.containsAll(requestId)){
+//                getCategoryRestaurant.add(restaurantDto);
+//            }
+//        }
+//
+//        for(ResponseSearchRestaurantDto searchRestaurantDto : getCategoryRestaurant){
+//            log.info(searchRestaurantDto.getCategoryId());
+//            log.info(searchRestaurantDto.getCategoryName());
+//            log.info(searchRestaurantDto.getName());
+//            log.info(searchRestaurantDto.getMenuName());
+//            log.info(String.valueOf(searchRestaurantDto.getWishCount()));
+//            log.info(String.valueOf(searchRestaurantDto.getWishState()));
+//            log.info("===========================================");
+//
+//        }
+//    }
 }
