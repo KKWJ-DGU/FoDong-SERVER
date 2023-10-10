@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.member.controller;
 
 import Fodong.serverdong.domain.member.dto.request.RequestMemberNicknameDto;
+import Fodong.serverdong.domain.member.dto.response.ResponseMemberInfoDto;
 import Fodong.serverdong.domain.member.service.MemberService;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
 import Fodong.serverdong.global.auth.adapter.MemberAdapter;
@@ -46,6 +47,13 @@ public class MemberController {
         return ResponseEntity.ok("닉네임이 성공적으로 설정되었습니다.");
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "회원 정보 조회", description = "회원 정보를 조회합니다.")
+    @GetMapping("/info")
+    public ResponseMemberInfoDto getMemberInfo(@AuthenticationPrincipal MemberAdapter memberAdapter) {
 
+        Long memberId = memberAdapter.getMember().getId();
+        return memberService.getMemberInfo(memberId);
+    }
 
 }

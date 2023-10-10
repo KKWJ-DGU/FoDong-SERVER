@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.member.service;
 
 import Fodong.serverdong.domain.member.Member;
+import Fodong.serverdong.domain.member.dto.response.ResponseMemberInfoDto;
 import Fodong.serverdong.domain.member.enums.SocialType;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
@@ -10,7 +11,7 @@ import Fodong.serverdong.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +68,16 @@ public class MemberService {
      */
     private boolean isNicknameDuplicate(String nickname) {
         return memberRepository.findByNickname(nickname).isPresent();
+    }
+
+    /**
+     * 회원 정보 조회
+     */
+    @Transactional
+    public ResponseMemberInfoDto getMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
+        return new ResponseMemberInfoDto(member.getNickname());
     }
 
 }
