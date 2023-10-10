@@ -65,11 +65,11 @@ public class RestaurantService {
     }
 
     @Transactional
-    public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId) {
+    public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId,Long memberId) {
         categoryId.forEach(category ->
                 categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
-        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId);
+        List<ResponseSearchRestaurantDto> searchRestaurant = restaurantQueryRepository.getSearchRestaurant(categoryId,memberId);
 
         HashSet<String> requestId = new HashSet<>();
         categoryId.forEach(cate -> requestId.add(String.valueOf(cate)));

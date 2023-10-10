@@ -67,6 +67,6 @@ public class RestaurantController {
     public List<ResponseSearchRestaurantDto> getSearchRestaurant(@PathVariable List<Long> categoryId , @AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
-        return restaurantService.getSearchRestaurant(categoryId);
+        return restaurantService.getSearchRestaurant(categoryId,memberId);
     }
 }
