@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.member.service;
 
 import Fodong.serverdong.domain.member.Member;
+import Fodong.serverdong.domain.member.dto.response.ResponseMemberInfoDto;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
@@ -57,5 +58,17 @@ class MemberServiceTest {
         });
 
         assertThat(exception.getMessage()).isEqualTo(new CustomException(CustomErrorCode.MEMBER_DUPLICATED_NICKNAME).getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 정보 조회")
+    void getUserInfoTest() {
+
+        Member testMember = memberRepository.findByEmail(testEmail).orElse(null);
+        assertThat(testMember).isNotNull();
+
+        ResponseMemberInfoDto memberInfo = memberService.getMemberInfo(testMember.getId());
+        assertThat(memberInfo.getNickname()).isEqualTo(testEmail);
+
     }
 }
