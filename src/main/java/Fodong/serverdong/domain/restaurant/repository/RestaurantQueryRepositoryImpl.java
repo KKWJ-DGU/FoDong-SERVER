@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static Fodong.serverdong.domain.category.QCategory.category;
 import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
