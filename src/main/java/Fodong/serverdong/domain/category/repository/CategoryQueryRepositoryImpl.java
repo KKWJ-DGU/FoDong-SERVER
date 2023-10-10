@@ -29,4 +29,11 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                 .from(category)
                 .fetch();
     }
+
+    @Override
+    public Long getCategoryId(){
+        return query.select(category.id)
+                .from(category)
+                .fetchFirst();
+    }
 }

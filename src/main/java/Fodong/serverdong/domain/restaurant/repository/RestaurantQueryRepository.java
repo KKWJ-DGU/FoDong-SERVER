@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface RestaurantQueryRepository {
 
-    List<ResponseRestaurantDto> getRandomRestaurant();
+    List<ResponseRestaurantDto> getRandomRestaurant(Long memberId);
 
-    List<ResponseRestaurantDto> getRestaurant(Long categoryId);
+    List<ResponseRestaurantDto> getRestaurant(Long categoryId,Long memberId);
 
-    ResponseRestaurantInfoDto getRestaurantInfo(Long productId);
+    ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId);
 
-    List<ResponseRestaurantDto> getRandomRestaurantChoice();
+    List<ResponseRestaurantDto> getRandomRestaurantChoice(Long memberId);
 
-    List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId);
+    List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId,Long memberId);
 }
