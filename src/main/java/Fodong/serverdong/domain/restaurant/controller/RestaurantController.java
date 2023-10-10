@@ -64,7 +64,9 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "검색 식당 조회",description = " 선택된 카테고리에 해당하는 식당을 조회합니다.")
     @GetMapping("/search/{categoryId}")
-    public List<ResponseSearchRestaurantDto> getSearchRestaurant(@PathVariable List<Long> categoryId){
+    public List<ResponseSearchRestaurantDto> getSearchRestaurant(@PathVariable List<Long> categoryId , @AuthenticationPrincipal MemberAdapter memberAdapter){
+
+        Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getSearchRestaurant(categoryId);
     }
 }
