@@ -56,4 +56,9 @@ public class MemberController {
         return memberService.getMemberInfo(memberId);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> testMethod(@AuthenticationPrincipal MemberAdapter memberAdapter) {
+        return ResponseEntity.ok("User details received " + memberAdapter.getUsername());
+    }
+
 }
