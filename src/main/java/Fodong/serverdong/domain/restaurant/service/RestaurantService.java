@@ -59,9 +59,9 @@ public class RestaurantService {
      * 랜덤 식당 1개 조회
      */
     @Transactional
-    public List<ResponseRestaurantDto> getRandomRestaurantChoice() {
+    public List<ResponseRestaurantDto> getRandomRestaurantChoice(Long memberId) {
 
-        return restaurantQueryRepository.getRandomRestaurantChoice();
+        return restaurantQueryRepository.getRandomRestaurantChoice(memberId);
     }
 
     @Transactional
