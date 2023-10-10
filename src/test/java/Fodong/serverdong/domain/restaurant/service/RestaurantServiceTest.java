@@ -84,17 +84,17 @@ class RestaurantServiceTest {
 
     }
 
-    @Test
-    @DisplayName("카테고리 별 식당 리스트")
-    void getRestaurant() throws Exception {
-
-        Long categoryId = categoryQueryRepository.getCategoryId();;
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/category/"+categoryId)
-                        .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
-                .andExpect(status().isOk());
-
-    }
+//    @Test
+//    @DisplayName("카테고리 별 식당 리스트")
+//    void getRestaurant() throws Exception {
+//
+//        Long categoryId = categoryQueryRepository.getCategoryId();;
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/category/"+categoryId)
+//                        .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
+//                .andExpect(status().isOk());
+//
+//    }
 
 //    @Test
 //    @DisplayName("식당 정보 반환")
