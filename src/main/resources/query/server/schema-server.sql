@@ -81,3 +81,5 @@ CREATE TABLE IF NOT EXISTS wishlist(
     FOREIGN KEY (category_id) REFERENCES category(category_id),
     FOREIGN KEY (member_id) REFERENCES member(member_id)
     );
+
+ALTER TABLE member_token ADD login_status VARCHAR(10) NOT NULL DEFAULT 'LOGIN';
