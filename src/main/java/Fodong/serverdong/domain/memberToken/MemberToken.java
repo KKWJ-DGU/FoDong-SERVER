@@ -7,7 +7,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static Fodong.serverdong.domain.memberToken.LonginStatus.LOGIN;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -37,10 +36,6 @@ public class MemberToken {
 
     @Column(name = "refresh_expiration" , nullable = false)
     private LocalDateTime refreshExpiration;
-
-    @Column(name = "login_status" , columnDefinition = "LOGIN")
-    @Enumerated(EnumType.STRING)
-    private LonginStatus loginStatus;
 
     public void updateTokens(String newAccessToken, LocalDateTime newAccessExpiration, String newRefreshToken, LocalDateTime newRefreshExpiration) {
         this.accessToken = newAccessToken;
