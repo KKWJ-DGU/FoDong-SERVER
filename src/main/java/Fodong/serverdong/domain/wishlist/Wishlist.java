@@ -8,6 +8,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -15,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Builder
 @AllArgsConstructor
-public class Wishlist extends BaseTimeEntity {
+public class Wishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,5 +35,8 @@ public class Wishlist extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @JoinColumn(name = "created_date" , nullable = false)
+    private LocalDateTime createdDate;
 
 }
