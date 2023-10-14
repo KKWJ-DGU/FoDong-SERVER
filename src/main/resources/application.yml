@@ -13,6 +13,9 @@ spring:
       hibernate:
         metadata_builder_contributor: Fodong.serverdong.global.query.CustomMysqlDialect
 
+  datasource:
+    hikari:
+      maximum-pool-size: 20
 
 springdoc:
   packages-to-scan: Fodong.serverdong.domain
