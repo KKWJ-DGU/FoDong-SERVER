@@ -42,24 +42,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         response.setCharacterEncoding("utf-8");
 
-        String accessToken = String.valueOf(jwtService.extractAccessToken(request));
-        String refreshToken = String.valueOf(jwtService.extractRefreshToken(request));
-
-        TokenStatus accessTokenStatus = jwtService.isAccessTokenValid(accessToken);
-
-        switch (accessTokenStatus) {
-            case VALID:
-                saveAuthentication(accessToken);
-                break;
-            case EXPIRED:
-                TokenStatus refreshTokenStatus = jwtService.isRefreshTokenValid(refreshToken);
-                if (refreshTokenStatus == TokenStatus.VALID) {
-                    jwtService.checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-                    return;
-                }
+        String refreshToken = jwtService.extractRefreshToken(request);
+        if (refreshToken != null && jwtService.isTokenValid(refreshToken) == TokenStatus.VALID) {
+            jwtService.checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
+            return;
         }
-        filterChain.doFilter(request, response);
 
+        String accessToken = jwtService.extractAccessToken(request);
+        TokenStatus accessTokenStatus = jwtService.isTokenValid(accessToken);
+        if (accessTokenStatus == TokenStatus.VALID) {
+            saveAuthentication(accessToken);
+            filterChain.doFilter(request, response);
+        }
 
     }
 
