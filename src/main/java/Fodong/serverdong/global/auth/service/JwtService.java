@@ -217,26 +217,7 @@ public class JwtService {
      * 토큰 유효성 검사
      */
     @SneakyThrows
-    public TokenStatus isAccessTokenValid(String token) {
-        try {
-            JWT.require(Algorithm.HMAC512(secretKeySpec.getEncoded())).build().verify(token);
-            return TokenStatus.VALID;
-        } catch (TokenExpiredException e) {
-            log.error("토큰이 만료되었습니다.", e.getMessage(), e);
-            return TokenStatus.EXPIRED;
-        } catch (JWTDecodeException e) {
-            log.error("JWT 토큰 디코딩 중 오류가 발생하였습니다.", e.getMessage(), e);
-            throw e;
-        } catch (NoSuchElementException e) {
-            log.error("사용자를 찾을 수 없습니다.");
-            throw e;
-        } catch (Exception e) {
-            log.error("예기치 않은 오류가 발생하였습니다. : {}", e.getMessage(), e);
-            throw e;
-        }
-    }
-    @SneakyThrows
-    public TokenStatus isRefreshTokenValid(String token) {
+    public TokenStatus isTokenValid(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secretKeySpec.getEncoded())).build().verify(token);
             return TokenStatus.VALID;
