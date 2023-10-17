@@ -8,7 +8,7 @@ import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
 import Fodong.serverdong.domain.wishlist.Wishlist;
-import Fodong.serverdong.domain.wishlist.dto.request.RequestWishlistDto;
+import Fodong.serverdong.domain.wishlist.dto.request.RequestWishlistCreationDto;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
@@ -57,7 +57,7 @@ public class WishlistService {
                 continue;
             }
 
-            Wishlist wishlist = RequestWishlistDto.toEntity(member, restaurant, category);
+            Wishlist wishlist = RequestWishlistCreationDto.toEntity(member, restaurant, category);
             wishlistsToAdd.add(wishlist);
         }
         wishlistRepository.saveAll(wishlistsToAdd);
