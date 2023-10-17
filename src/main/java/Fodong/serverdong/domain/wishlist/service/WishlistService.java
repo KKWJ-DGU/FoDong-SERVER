@@ -8,14 +8,13 @@ import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
 import Fodong.serverdong.domain.wishlist.Wishlist;
+import Fodong.serverdong.domain.wishlist.dto.request.RequestWishlistDto;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,12 +57,7 @@ public class WishlistService {
                 continue;
             }
 
-            Wishlist wishlist = Wishlist.builder()
-                    .restaurant(restaurant)
-                    .category(category)
-                    .member(member)
-                    .createdDate(LocalDateTime.now())
-                    .build();
+            Wishlist wishlist = RequestWishlistDto.toEntity(member, restaurant, category);
             wishlistsToAdd.add(wishlist);
         }
         wishlistRepository.saveAll(wishlistsToAdd);
