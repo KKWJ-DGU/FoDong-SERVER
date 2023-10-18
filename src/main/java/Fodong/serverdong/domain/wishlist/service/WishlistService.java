@@ -63,4 +63,24 @@ public class WishlistService {
         wishlistRepository.saveAll(wishlistsToAdd);
     }
 
+    /**
+     * 위시리스트 삭제
+     * @param restaurantId 식당 아이디
+     * @param memberId 회원 아이디
+     */
+    @Transactional
+    public void deleteWishlist(Long restaurantId, Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
+
+        List<Wishlist> wishlistsToDelete = wishlistRepository.findByMemberAndRestaurant(member, restaurant);
+
+        wishlistRepository.deleteAll(wishlistsToDelete);
+    }
+
+
 }

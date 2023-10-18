@@ -15,6 +15,6 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     List<Wishlist> findByMember(Member member);
     Optional<Wishlist> findByMemberAndRestaurantAndCategory(Member member, Restaurant restaurant, Category category);
-
+    List<Wishlist> findByMemberAndRestaurant(Member member, Restaurant restaurant);
 
 }
