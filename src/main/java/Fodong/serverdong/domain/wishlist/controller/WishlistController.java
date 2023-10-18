@@ -21,9 +21,9 @@ public class WishlistController {
     @ApiDocumentResponse
     @Operation(summary = "위시리스트 추가", description = "식당을 위시리스트에 추가합니다.")
     @PostMapping
-    public void addWishlist(@RequestBody RequestWishlistDto requestDto, @AuthenticationPrincipal MemberAdapter memberAdapter) {
+    public void addWishlist(@RequestBody RequestAddWishlistDto addDto, @AuthenticationPrincipal MemberAdapter memberAdapter) {
         Long memberId = memberAdapter.getMember().getId();
-        wishlistService.addWishlist(requestDto.getRestaurantId(), memberId);
+        wishlistService.addWishlist(addDto.getRestaurantId(), memberId);
     }
 
 }

@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestWishlistDto {
+public class RequestAddWishlistDto {
     private Long restaurantId;
 
 }
