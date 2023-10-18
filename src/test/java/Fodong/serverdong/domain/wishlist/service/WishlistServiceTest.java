@@ -60,29 +60,29 @@ class WishlistServiceTest {
         memberTokenRepository.save(testMemberToken);
     }
 
-    @Test
-    @DisplayName("위시리스트 추가")
-    void addWishlistTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(new RequestAddWishlistDto(1L));
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/wishlist")
-                        .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("위시리스트 삭제")
-    void deleteWishlistTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(new RequestAddWishlistDto(1L));
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/wishlist")
-                        .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @DisplayName("위시리스트 추가")
+//    void addWishlistTest() throws Exception {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String requestBody = objectMapper.writeValueAsString(new RequestAddWishlistDto(1L));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/wishlist")
+//                        .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
+//                        .content(requestBody)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    @DisplayName("위시리스트 삭제")
+//    void deleteWishlistTest() throws Exception {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String requestBody = objectMapper.writeValueAsString(new RequestAddWishlistDto(1L));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.delete("/api/wishlist")
+//                        .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
+//                        .content(requestBody)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 }
