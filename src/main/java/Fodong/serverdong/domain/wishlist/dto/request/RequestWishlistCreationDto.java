@@ -6,11 +6,9 @@ import Fodong.serverdong.domain.restaurant.Restaurant;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 @Getter
-@Setter
 @AllArgsConstructor
 public class RequestWishlistCreationDto {
     public static Wishlist toEntity(Member member, Restaurant restaurant, Category category) {
