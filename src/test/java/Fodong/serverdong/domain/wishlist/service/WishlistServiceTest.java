@@ -10,6 +10,7 @@ import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +37,22 @@ class WishlistServiceTest {
     @Autowired
     WishlistService wishlistService;
 
+    Member testMember;
+    Restaurant testRestaurant;
+    Category testCategory;
+    RestaurantCategory testRestaurantCategory;
     Long testMemberId;
     Long testRestaurantId;
 
-    @Test
-    @DisplayName("위시리스트 추가")
-    void addWishlistTest(){
-
-        Member testMember = Member.builder()
+    @BeforeEach
+    void setup() {
+        testMember = Member.builder()
                 .email("testEmail@exmaple.com")
                 .nickname("Test Nickname")
                 .build();
-        memberRepository.save(testMember);
         testMemberId = memberRepository.save(testMember).getId();
 
-        Restaurant testRestaurant = Restaurant.builder()
+        testRestaurant = Restaurant.builder()
                 .id(1L)
                 .name("세븐일레븐")
                 .webUrl("webUrl")
@@ -59,22 +61,26 @@ class WishlistServiceTest {
                 .imgUrl("imgUrl")
                 .wishCount(0)
                 .build();
-        restaurantRepository.save(testRestaurant);
         testRestaurantId = restaurantRepository.save(testRestaurant).getId();
 
-        Category testCategory = Category.builder()
+        testCategory = Category.builder()
                 .id(1L)
                 .categoryName("TestCategory")
                 .categoryImgUrl("testImageUrl")
                 .build();
         categoryRepository.save(testCategory);
 
-        RestaurantCategory testRestaurantCategory = RestaurantCategory.builder()
+        testRestaurantCategory = RestaurantCategory.builder()
                 .id(1L)
                 .restaurant(testRestaurant)
                 .category(testCategory)
                 .build();
         restaurantCategoryRepository.save(testRestaurantCategory);
+    }
+
+    @Test
+    @DisplayName("위시리스트 추가")
+    void addWishlistTest(){
 
         wishlistService.addWishlist(testRestaurantId, testMemberId);
 
@@ -86,4 +92,15 @@ class WishlistServiceTest {
         }
 
     }
+    @Test
+    @DisplayName("위시리스트 삭제")
+    void deleteWishlistTest(){
+
+        wishlistService.addWishlist(testRestaurantId, testMemberId);
+        wishlistService.deleteWishlist(testRestaurantId, testMemberId);
+
+        List<Wishlist> wishlists = wishlistRepository.findByMemberAndRestaurant(testMember, testRestaurant);
+        assertThat(wishlists).isEmpty();
+    }
+
 }
