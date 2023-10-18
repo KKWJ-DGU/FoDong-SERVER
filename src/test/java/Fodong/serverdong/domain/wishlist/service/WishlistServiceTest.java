@@ -10,7 +10,6 @@ import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +43,10 @@ class WishlistServiceTest {
     Long testMemberId;
     Long testRestaurantId;
 
-    @BeforeEach
-    void setup() {
+    @Test
+    @DisplayName("위시리스트 추가")
+    void addWishlistTest(){
+
         testMember = Member.builder()
                 .email("testEmail@exmaple.com")
                 .nickname("Test Nickname")
@@ -76,11 +77,6 @@ class WishlistServiceTest {
                 .category(testCategory)
                 .build();
         restaurantCategoryRepository.save(testRestaurantCategory);
-    }
-
-    @Test
-    @DisplayName("위시리스트 추가")
-    void addWishlistTest(){
 
         wishlistService.addWishlist(testRestaurantId, testMemberId);
 
@@ -95,6 +91,37 @@ class WishlistServiceTest {
     @Test
     @DisplayName("위시리스트 삭제")
     void deleteWishlistTest(){
+
+        testMember = Member.builder()
+                .email("testEmail@exmaple.com")
+                .nickname("Test Nickname")
+                .build();
+        testMemberId = memberRepository.save(testMember).getId();
+
+        testRestaurant = Restaurant.builder()
+                .id(1L)
+                .name("세븐일레븐")
+                .webUrl("webUrl")
+                .phoneNumber("031-000-0000")
+                .address("경기도")
+                .imgUrl("imgUrl")
+                .wishCount(0)
+                .build();
+        testRestaurantId = restaurantRepository.save(testRestaurant).getId();
+
+        testCategory = Category.builder()
+                .id(1L)
+                .categoryName("TestCategory")
+                .categoryImgUrl("testImageUrl")
+                .build();
+        categoryRepository.save(testCategory);
+
+        testRestaurantCategory = RestaurantCategory.builder()
+                .id(1L)
+                .restaurant(testRestaurant)
+                .category(testCategory)
+                .build();
+        restaurantCategoryRepository.save(testRestaurantCategory);
 
         wishlistService.addWishlist(testRestaurantId, testMemberId);
         wishlistService.deleteWishlist(testRestaurantId, testMemberId);
