@@ -85,4 +85,16 @@ class WishlistServiceTest {
 //                        .contentType(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isOk());
 //    }
+    @Test
+    @DisplayName("위시리스트 전체 조회")
+    void deleteWishlistTest() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist")
+                        .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
 }
