@@ -41,7 +41,7 @@ public class WishlistController {
     @ApiDocumentResponse
     @Operation(summary = "위시리스트 조회", description = "위시리스트에 있는 레스토랑 목록을 반환합니다.")
     @GetMapping
-    public List<ResponseRestaurantDto> getWishlist(@RequestParam(required = false) Long categoryId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
+    public List<ResponseRestaurantDto> getWishlist(Long categoryId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
         Long memberId = memberAdapter.getMember().getId();
         return wishlistService.getWishlist(memberId, categoryId);
     }

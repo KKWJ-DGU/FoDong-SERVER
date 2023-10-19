@@ -55,10 +55,7 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
                 .fetch();
     }
     private BooleanExpression eqCategoryId(Long categoryId) {
-        if (categoryId == null) {
-            return null;
-        }
-        return restaurantCategory.category.id.eq(categoryId);
+        return categoryId != null ? restaurantCategory.category.id.eq(categoryId) : null;
     }
 
 
