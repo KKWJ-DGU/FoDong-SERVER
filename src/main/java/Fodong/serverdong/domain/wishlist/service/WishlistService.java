@@ -88,10 +88,11 @@ public class WishlistService {
     /**
      * 위시리스트 조회
      * @param memberId 회원 아이디
+     * @param categoryId 카테고리 아이디
      */
     @Transactional
-    public List<ResponseRestaurantDto> getWishlistByMemberId(Long memberId) {
-        return wishlistQueryRepository.getAllWishlistRestaurant(memberId);
+    public List<ResponseRestaurantDto> getWishlist(Long memberId, Long categoryId) {
+        return wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId);
     }
 
 

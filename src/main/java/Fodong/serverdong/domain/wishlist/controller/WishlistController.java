@@ -39,11 +39,11 @@ public class WishlistController {
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "위시리스트 전체 조회", description = "위시리스트에 있는 레스토랑 목록 전체를 반환합니다.")
+    @Operation(summary = "위시리스트 조회", description = "위시리스트에 있는 레스토랑 목록을 반환합니다.")
     @GetMapping
-    public List<ResponseRestaurantDto> getWishlist(@AuthenticationPrincipal MemberAdapter memberAdapter) {
+    public List<ResponseRestaurantDto> getWishlist(@RequestParam(required = false) Long categoryId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
         Long memberId = memberAdapter.getMember().getId();
-        return wishlistService.getWishlistByMemberId(memberId);
+        return wishlistService.getWishlist(memberId, categoryId);
     }
 
 }
