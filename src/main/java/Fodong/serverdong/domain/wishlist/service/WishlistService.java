@@ -4,11 +4,13 @@ import Fodong.serverdong.domain.category.Category;
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.dto.request.RequestWishlistCreationDto;
+import Fodong.serverdong.domain.wishlist.repository.WishlistQueryRepository;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
@@ -27,6 +29,7 @@ public class WishlistService {
     private final MemberRepository memberRepository;
     private final RestaurantRepository restaurantRepository;
     private final RestaurantCategoryRepository restaurantCategoryRepository;
+    private final WishlistQueryRepository wishlistQueryRepository;
 
     /**
      * 위시리스트 추가
@@ -80,6 +83,15 @@ public class WishlistService {
         List<Wishlist> wishlistsToDelete = wishlistRepository.findByMemberAndRestaurant(member, restaurant);
 
         wishlistRepository.deleteAll(wishlistsToDelete);
+    }
+
+    /**
+     * 위시리스트 조회
+     * @param memberId 회원 아이디
+     */
+    @Transactional
+    public List<ResponseRestaurantDto> getWishlistByMemberId(Long memberId) {
+        return wishlistQueryRepository.getAllWishlistRestaurant(memberId);
     }
 
 
