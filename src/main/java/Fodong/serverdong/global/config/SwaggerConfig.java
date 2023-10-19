@@ -10,6 +10,8 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.security.Security;
+
 
 @Configuration
 public class SwaggerConfig {
@@ -29,17 +31,27 @@ public class SwaggerConfig {
                 .version("v0.0.1")
                 .description("Fodong 프로젝트 API 명세서");
 
-        String jwt = "JWT";
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt); // 헤더에 토큰 포함
-        Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
-                .name(jwt)
+        String access = "Access Token";
+        SecurityRequirement accessToken = new SecurityRequirement().addList(access);
+        Components components = new Components().addSecuritySchemes(access, new SecurityScheme()
+                .name(access)
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
-                .bearerFormat("JWT"));
+                .bearerFormat("Authorization"));
+
+        String refresh = "Refresh Token";
+        SecurityRequirement refreshToken = new SecurityRequirement().addList(refresh);
+        Components components1 = new Components().addSecuritySchemes(refresh, new SecurityScheme()
+                .name(refresh)
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("Refresh"));
 
         return new OpenAPI()
                 .components(components)
-                .addSecurityItem(securityRequirement)
+                .addSecurityItem(accessToken)
+                .components(components1)
+                .addSecurityItem(refreshToken)
                 .info(info);
     }
 
