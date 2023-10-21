@@ -31,7 +31,7 @@ public class MemberController {
     @GetMapping(value = "/login/oauth/{socialType}")
     public ResponseEntity<ResponseMemberTokenDto> oauthLogin(
             @PathVariable(name = "socialType") String socialType,
-            @RequestHeader("Authorization") String authorization) {
+            @RequestHeader("SocialToken") String authorization) {
 
         ResponseMemberTokenDto responseMemberTokenDto = memberService.socialUserInfo(socialType, authorization);
 
