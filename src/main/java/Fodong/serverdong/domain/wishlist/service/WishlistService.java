@@ -91,7 +91,16 @@ public class WishlistService {
 
         List<Wishlist> wishlistsToDelete = wishlistRepository.findByMemberAndRestaurant(member, restaurant);
 
+        if (wishlistsToDelete.isEmpty()) {
+            // 삭제할 위시리스트가 없으면 바로 종료
+            return;
+        }
+
         wishlistRepository.deleteAll(wishlistsToDelete);
+
+        restaurant.decreaseWishCount();
+        restaurantRepository.save(restaurant);
+
     }
 
     /**

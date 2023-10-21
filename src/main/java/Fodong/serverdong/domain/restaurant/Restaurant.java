@@ -38,4 +38,7 @@ public class Restaurant extends BaseTimeEntity {
     public void increaseWishCount() {
         this.wishCount++;
     }
+    public void decreaseWishCount() {
+        this.wishCount = Math.max(0, this.wishCount - 1);
+    }
 }
