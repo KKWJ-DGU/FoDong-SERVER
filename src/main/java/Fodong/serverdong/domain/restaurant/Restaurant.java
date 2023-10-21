@@ -35,8 +35,10 @@ public class Restaurant extends BaseTimeEntity {
     @Column(name = "wish_count" , columnDefinition = "INT DEFAULT 0")
     private int wishCount;
 
+    public void increaseWishCount() {
+        this.wishCount++;
+    }
     public void decreaseWishCount() {
         this.wishCount = Math.max(0, this.wishCount - 1);
     }
-
 }

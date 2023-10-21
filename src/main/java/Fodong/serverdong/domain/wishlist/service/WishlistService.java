@@ -50,6 +50,9 @@ public class WishlistService {
 
         List<Wishlist> wishlistsToAdd = new ArrayList<>();
 
+        // 이미 위시리스트에 추가되어 있는지 검사
+        boolean isAlreadyWishlisted = wishlistRepository.findByMemberAndRestaurant(member, restaurant).size() > 0;
+
         // 각 카테고리에 대해 위시리스트 생성
         for (RestaurantCategory restaurantCategory : restaurantCategories) {
             Category category = restaurantCategory.getCategory();
@@ -64,6 +67,12 @@ public class WishlistService {
             wishlistsToAdd.add(wishlist);
         }
         wishlistRepository.saveAll(wishlistsToAdd);
+
+        // wishCount 증가
+        if (!isAlreadyWishlisted) {
+            restaurant.increaseWishCount();
+            restaurantRepository.save(restaurant);
+        }
     }
 
     /**
