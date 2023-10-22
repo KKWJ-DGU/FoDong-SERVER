@@ -6,6 +6,7 @@ import Fodong.serverdong.global.auth.enums.TokenStatus;
 import Fodong.serverdong.global.auth.service.JwtService;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomErrorResponse;
+import Fodong.serverdong.global.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String LOGIN_URL = "/api/member/login/oauth";
     private static final String SWAGGER_UI_URL = "/fodong/swagger-ui";
+    private static final String TOKEN_REISSUE_URL = "/api/membertoken/reissue";
     private final JwtService jwtService;
     private final MemberTokenRepository memberTokenRepository;
 
@@ -43,6 +45,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("utf-8");
 
         String refreshToken = jwtService.extractRefreshToken(request);
+        if (requestURI.contains(TOKEN_REISSUE_URL)) {
+            if (refreshToken == null) {
+                throw new CustomException(CustomErrorCode.REFRESH_TOKEN_MISSING);
+            }
+        }
+
         if (refreshToken != null && jwtService.isTokenValid(refreshToken) == TokenStatus.VALID) {
             jwtService.checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
             return;
