@@ -57,6 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String accessToken = jwtService.extractAccessToken(request);
+        if (accessToken == null) {
+            throw new CustomException(CustomErrorCode.ACCESS_TOKEN_MISSING);
+        }
+
         TokenStatus accessTokenStatus = jwtService.isTokenValid(accessToken);
         if (accessTokenStatus == TokenStatus.VALID) {
             saveAuthentication(accessToken);
