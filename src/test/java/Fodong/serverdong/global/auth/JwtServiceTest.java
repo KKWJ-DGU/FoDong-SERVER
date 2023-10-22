@@ -147,7 +147,7 @@ class JwtServiceTest {
     @DisplayName("유효하지 않은 access 토큰으로 요청")
     void testRequestWithInvalidToken() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/member/test")
-                        .header("Authorization", "Invalid Token"))
+                        .header("Authorization", "Bearer Invalid Token"))
                 .andExpect(jsonPath("$.code").value(CustomErrorCode.INVALID_TOKEN.toString()));
     }
 
@@ -156,8 +156,8 @@ class JwtServiceTest {
     @DisplayName("토큰 없이 요청")
     void testRequestWithoutToken() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/member/test"))
-                .andExpect(status().isUnauthorized()) // 403 Forbidden
-                .andExpect(jsonPath("$.code").value(CustomErrorCode.INVALID_TOKEN.toString()));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(CustomErrorCode.ACCESS_TOKEN_MISSING.toString()));
     }
 
     @Test
