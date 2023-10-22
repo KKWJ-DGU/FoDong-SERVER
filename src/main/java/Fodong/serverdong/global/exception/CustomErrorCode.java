@@ -24,7 +24,8 @@ public enum CustomErrorCode {
     UNSUPPORTED_SOCIAL_TYPE(BAD_REQUEST, "지원하지 않는 소셜 타입입니다."),
     MEMBER_TOKEN_NOT_FOUND(BAD_REQUEST,"해당 회원 토큰이 존재하지 않습니다."),
     UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred"),
-    MEMBER_DUPLICATED_NICKNAME(BAD_REQUEST, "사용 중인 닉네임입니다.");
+    MEMBER_DUPLICATED_NICKNAME(BAD_REQUEST, "사용 중인 닉네임입니다."),
+    REFRESH_TOKEN_MISSING(BAD_REQUEST, "리프레시 토큰이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
