@@ -224,7 +224,7 @@ public class JwtService {
         } catch (TokenExpiredException e) {
             log.error("토큰이 만료되었습니다.", e.getMessage(), e);
             throw e;
-        } catch (JWTDecodeException e) {
+        } catch (JWTDecodeException | IllegalArgumentException e) {
             log.error("JWT 토큰 디코딩 중 오류가 발생하였습니다.", e.getMessage(), e);
             throw e;
         } catch (NoSuchElementException e) {
