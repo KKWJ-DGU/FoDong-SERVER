@@ -45,10 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("utf-8");
 
         String refreshToken = jwtService.extractRefreshToken(request);
-        if (requestURI.contains(TOKEN_REISSUE_URL)) {
-            if (refreshToken == null) {
-                throw new CustomException(CustomErrorCode.REFRESH_TOKEN_MISSING);
-            }
+        if (requestURI.contains(TOKEN_REISSUE_URL) && refreshToken == null) {
+            throw new CustomException(CustomErrorCode.REFRESH_TOKEN_MISSING);
         }
 
         if (refreshToken != null && jwtService.isTokenValid(refreshToken) == TokenStatus.VALID) {
