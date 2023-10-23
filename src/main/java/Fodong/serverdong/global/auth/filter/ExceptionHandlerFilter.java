@@ -3,7 +3,7 @@ package Fodong.serverdong.global.auth.filter;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -36,7 +36,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             log.error("토큰이 만료되었습니다.");
             setErrorResponse(response, CustomErrorCode.TOKEN_EXPIRED);
 
-        } catch (JwtException | IllegalArgumentException | JWTDecodeException e) {
+        } catch (JwtException | IllegalArgumentException | JWTDecodeException | SignatureVerificationException e) {
             log.error("유효하지 않은 토큰입니다.");
             setErrorResponse(response, CustomErrorCode.INVALID_TOKEN);
 
