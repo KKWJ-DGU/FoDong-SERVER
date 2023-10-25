@@ -55,9 +55,9 @@ public class RestaurantController {
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "랜덤 식당 추천" ,description = "랜덤으로 식당을 추천해줍니다.")
+    @Operation(summary = "식당 랜덤 추천" ,description = "식당을 랜덤으로 추천해줍니다.")
     @GetMapping("/random/choice")
-    public List<ResponseRestaurantDto> getRestaurantChoice(@AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRestaurantDto>> getRestaurantChoice(@AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRandomRestaurantChoice(memberId);

@@ -19,6 +19,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class RestaurantService {
 
     private final RestaurantQueryRepositoryImpl restaurantQueryRepository;
@@ -28,7 +29,6 @@ public class RestaurantService {
     /**
      * 랜덤 식당 리스트 조회
      */
-    @Transactional
     public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(Long memberId) {
         return Collections.singletonMap("randomRestaurantList",restaurantQueryRepository.getRandomRestaurant(memberId));
     }
@@ -36,7 +36,6 @@ public class RestaurantService {
     /**
      * 카테고리 별 식당 리스트 조회
      */
-    @Transactional
     public Map<String,List<ResponseRestaurantDto>> getRestaurant(Long categoryId,Long memberId) {
 
         categoryRepository.findById(categoryId).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
@@ -46,7 +45,6 @@ public class RestaurantService {
     /**
      * 식당 정보 조회
      */
-    @Transactional
     public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId) {
         restaurantRepository.findById(restaurantId).orElseThrow(()->new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
@@ -54,15 +52,14 @@ public class RestaurantService {
     }
 
     /**
-     * 랜덤 식당 1개 조회
+     * 식당 랜덤 추천
      */
-    @Transactional
-    public List<ResponseRestaurantDto> getRandomRestaurantChoice(Long memberId) {
+    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurantChoice(Long memberId) {
 
-        return restaurantQueryRepository.getRandomRestaurantChoice(memberId);
+        return Collections.singletonMap("recommendedRestaurant",restaurantQueryRepository.getRandomRestaurantChoice(memberId));
     }
 
-    @Transactional
+
     public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId,Long memberId) {
         categoryId.forEach(category ->
                 categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
