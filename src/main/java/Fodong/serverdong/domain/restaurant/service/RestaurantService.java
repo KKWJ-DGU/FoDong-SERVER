@@ -28,6 +28,8 @@ public class RestaurantService {
 
     /**
      * 랜덤 식당 리스트 조회
+     * @param memberId 회원 ID
+     * @return 랜덤 식당 리스트
      */
     public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(Long memberId) {
         return Collections.singletonMap("randomRestaurantList",restaurantQueryRepository.getRandomRestaurant(memberId));
@@ -35,6 +37,9 @@ public class RestaurantService {
 
     /**
      * 카테고리 별 식당 리스트 조회
+     * @param categoryId 카테고리 ID
+     * @param memberId 회원 ID
+     * @return 카테고리 별 식당 리스트
      */
     public Map<String,List<ResponseRestaurantDto>> getRestaurant(Long categoryId,Long memberId) {
 
@@ -44,6 +49,9 @@ public class RestaurantService {
 
     /**
      * 식당 정보 조회
+     * @param restaurantId 식당 ID
+     * @param memberId 회원 ID
+     * @return 식당 정보
      */
     public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId) {
         restaurantRepository.findById(restaurantId).orElseThrow(()->new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
@@ -53,6 +61,8 @@ public class RestaurantService {
 
     /**
      * 식당 랜덤 추천
+     * @param memberId 회원 ID
+     * @return 추천 식당 리스트
      */
     public Map<String,List<ResponseRestaurantDto>> getRandomRestaurantChoice(Long memberId) {
 
@@ -60,7 +70,13 @@ public class RestaurantService {
     }
 
 
-    public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId,Long memberId) {
+    /**
+     * 식당 검색
+     * @param categoryId 카테고리 ID
+     * @param memberId 회원 Id
+     * @return 검색된 식당 리스트
+     */
+    public Map<String,List<ResponseSearchRestaurantDto>> getSearchRestaurant(List<Long> categoryId,Long memberId) {
         categoryId.forEach(category ->
                 categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
@@ -79,6 +95,6 @@ public class RestaurantService {
             }
         }
 
-        return getCategoryRestaurant;
+        return Collections.singletonMap("searchRestaurant",getCategoryRestaurant);
     }
 }
