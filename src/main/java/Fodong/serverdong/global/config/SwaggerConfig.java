@@ -27,7 +27,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi TokenApi(){
         return GroupedOpenApi.builder()
-                .group("AllToken API")
+                .group("RefreshToken API")
                 .addOpenApiCustomiser(refreshNeed())
                 .pathsToMatch("/api/membertoken/reissue")
                 .build();
@@ -61,6 +61,15 @@ public class SwaggerConfig {
                 .bearerFormat("JWT")
                 .scheme("bearer");
     }
+
+    private SecurityScheme refreshTokenSchema(){
+        return new SecurityScheme()
+                .name("Refresh")
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .bearerFormat("JWT")
+                .scheme("bearer");
+    }
     public OpenApiCustomiser accessNeed() {
 
         return OpenApi -> OpenApi
@@ -69,16 +78,8 @@ public class SwaggerConfig {
     }
 
     public OpenApiCustomiser refreshNeed() {
-        SecurityScheme refreshTokenSchema = new SecurityScheme()
-                .name("Refresh")
-                .type(SecurityScheme.Type.APIKEY)
-                .in(SecurityScheme.In.HEADER)
-                .bearerFormat("JWT")
-                .scheme("bearer");
-
         return OpenApi -> OpenApi
-                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
                 .addSecurityItem(new SecurityRequirement().addList("Refresh"))
-                .getComponents().addSecuritySchemes("Authorization",accessTokenSchema()).addSecuritySchemes("Refresh",refreshTokenSchema);
+                .getComponents().addSecuritySchemes("Refresh",refreshTokenSchema());
     }
 }

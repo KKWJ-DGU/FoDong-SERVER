@@ -23,7 +23,7 @@ springdoc:
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     path : /fodong/swagger-ui/swagger-ui.html
-    groups-order: DESC
+    groups-order: ASC
     tags-sorter: :alpha
     operations-sorter: alpha
   api-docs:
