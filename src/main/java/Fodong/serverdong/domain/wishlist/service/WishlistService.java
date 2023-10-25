@@ -17,9 +17,8 @@ import Fodong.serverdong.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -109,8 +108,8 @@ public class WishlistService {
      * @param categoryId 카테고리 아이디
      */
     @Transactional
-    public List<ResponseRestaurantDto> getWishlist(Long memberId, Long categoryId) {
-        return wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId);
+    public Map<String,List<ResponseRestaurantDto>> getWishlist(Long memberId, Long categoryId) {
+        return Collections.singletonMap("wishlist",wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId));
     }
 
 

@@ -13,14 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class RestaurantService {
 
     private final RestaurantQueryRepositoryImpl restaurantQueryRepository;
@@ -29,26 +28,31 @@ public class RestaurantService {
 
     /**
      * 랜덤 식당 리스트 조회
+     * @param memberId 회원 ID
+     * @return 랜덤 식당 리스트
      */
-    @Transactional
-    public List<ResponseRestaurantDto> getRandomRestaurant(Long memberId) {
-        return restaurantQueryRepository.getRandomRestaurant(memberId);
+    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(Long memberId) {
+        return Collections.singletonMap("randomRestaurantList",restaurantQueryRepository.getRandomRestaurant(memberId));
     }
 
     /**
      * 카테고리 별 식당 리스트 조회
+     * @param categoryId 카테고리 ID
+     * @param memberId 회원 ID
+     * @return 카테고리 별 식당 리스트
      */
-    @Transactional
-    public List<ResponseRestaurantDto> getRestaurant(Long categoryId,Long memberId) {
+    public Map<String,List<ResponseRestaurantDto>> getRestaurant(Long categoryId,Long memberId) {
 
         categoryRepository.findById(categoryId).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_FOUND));
-        return restaurantQueryRepository.getRestaurant(categoryId,memberId);
+        return Collections.singletonMap("restaurantByCategory",restaurantQueryRepository.getRestaurant(categoryId,memberId));
     }
 
     /**
      * 식당 정보 조회
+     * @param restaurantId 식당 ID
+     * @param memberId 회원 ID
+     * @return 식당 정보
      */
-    @Transactional
     public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId) {
         restaurantRepository.findById(restaurantId).orElseThrow(()->new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
@@ -56,16 +60,23 @@ public class RestaurantService {
     }
 
     /**
-     * 랜덤 식당 1개 조회
+     * 식당 랜덤 추천
+     * @param memberId 회원 ID
+     * @return 추천 식당 리스트
      */
-    @Transactional
-    public List<ResponseRestaurantDto> getRandomRestaurantChoice(Long memberId) {
+    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurantChoice(Long memberId) {
 
-        return restaurantQueryRepository.getRandomRestaurantChoice(memberId);
+        return Collections.singletonMap("recommendedRestaurant",restaurantQueryRepository.getRandomRestaurantChoice(memberId));
     }
 
-    @Transactional
-    public List<ResponseSearchRestaurantDto> getSearchRestaurant(List<Long> categoryId,Long memberId) {
+
+    /**
+     * 식당 검색
+     * @param categoryId 카테고리 ID
+     * @param memberId 회원 Id
+     * @return 검색된 식당 리스트
+     */
+    public Map<String,List<ResponseSearchRestaurantDto>> getSearchRestaurant(List<Long> categoryId,Long memberId) {
         categoryId.forEach(category ->
                 categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
@@ -84,6 +95,6 @@ public class RestaurantService {
             }
         }
 
-        return getCategoryRestaurant;
+        return Collections.singletonMap("searchRestaurant",getCategoryRestaurant);
     }
 }

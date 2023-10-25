@@ -7,16 +7,16 @@ import Fodong.serverdong.global.config.ApiDocumentResponse;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.service.RestaurantService;
+import Fodong.serverdong.global.exception.CustomErrorCode;
+import Fodong.serverdong.global.exception.CustomException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "랜덤 식당 리스트 조회", description = "랜덤으로 식당 리스트를 조회합니다.")
     @GetMapping("/random")
-    public List<ResponseRestaurantDto> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRandomRestaurant(memberId);
@@ -38,7 +38,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "카테고리 별 식당 리스트 조회",description = "카테고리에 해당하는 식당 리스트를 조회합니다.")
     @GetMapping("/category/{categoryId}")
-    public List<ResponseRestaurantDto> getRestaurant(@PathVariable Long categoryId , @AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRestaurantDto>> getRestaurant(@PathVariable Long categoryId , @AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRestaurant(categoryId,memberId);
@@ -54,19 +54,23 @@ public class RestaurantController {
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "랜덤 식당 추천" ,description = "랜덤으로 식당을 추천해줍니다.")
+    @Operation(summary = "식당 랜덤 추천" ,description = "식당을 랜덤으로 추천해줍니다.")
     @GetMapping("/random/choice")
-    public List<ResponseRestaurantDto> getRestaurantChoice(@AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRestaurantDto>> getRestaurantChoice(@AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRandomRestaurantChoice(memberId);
     }
+
     @ApiDocumentResponse
-    @Operation(summary = "검색 식당 조회",description = " 선택된 카테고리에 해당하는 식당을 조회합니다.")
-    @GetMapping("/search/{categoryId}")
-    public List<ResponseSearchRestaurantDto> getSearchRestaurant(@PathVariable List<Long> categoryId , @AuthenticationPrincipal MemberAdapter memberAdapter){
+    @Operation(summary = "식당 검색",description = " 카테고리를 선택하여 식당을 검색합니다.")
+    @GetMapping("/search")
+    public Map<String,List<ResponseSearchRestaurantDto>> getSearchRestaurant
+            (@RequestParam List<Long> categoryId , @AuthenticationPrincipal MemberAdapter memberAdapter) {
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getSearchRestaurant(categoryId,memberId);
+
+
     }
 }
