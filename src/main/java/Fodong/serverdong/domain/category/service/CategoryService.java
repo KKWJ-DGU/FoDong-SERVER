@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -15,9 +17,14 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryQueryRepositoryImpl categoryQueryRepository;
-    @Transactional
-    public List<ResponseCategoryListDto> getCategoryList() {
 
-        return categoryQueryRepository.getCategoryList();
+    /**
+     * 카테고리 리스트 조회
+     * @return 카테고리 리스트
+     */
+    @Transactional(readOnly = true)
+    public Map<String,List<ResponseCategoryListDto>> getCategoryList() {
+
+        return Collections.singletonMap("categoryList",categoryQueryRepository.getCategoryList());
     }
 }

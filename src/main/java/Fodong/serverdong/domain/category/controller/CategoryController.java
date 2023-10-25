@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class CategoryController {
     @ApiDocumentResponse
     @Operation( summary = "카테고리 리스트", description = "카테고리 리스트를 조회합니다.")
     @GetMapping("/list")
-    public List<ResponseCategoryListDto> getCategoryList(){
+    public Map<String,List<ResponseCategoryListDto>> getCategoryList(){
         return categoryService.getCategoryList();
     }
 }
