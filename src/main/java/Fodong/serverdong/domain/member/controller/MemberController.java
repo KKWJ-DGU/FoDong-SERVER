@@ -28,7 +28,7 @@ public class MemberController {
      */
     @ApiDocumentResponse
     @Operation(summary = "소셜 로그인",description = "소셜 로그인을 진행합니다.")
-    @GetMapping(value = "/login/oauth/{socialType}")
+    @PostMapping(value = "/login/oauth/{socialType}")
     public ResponseEntity<ResponseMemberTokenDto> oauthLogin(
             @PathVariable(name = "socialType") String socialType,
             @RequestHeader("SocialToken") String authorization) {
