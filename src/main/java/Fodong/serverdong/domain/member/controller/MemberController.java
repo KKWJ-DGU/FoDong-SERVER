@@ -1,6 +1,7 @@
 package Fodong.serverdong.domain.member.controller;
 
 import Fodong.serverdong.domain.member.dto.request.RequestMemberNicknameDto;
+import Fodong.serverdong.domain.member.dto.request.RequestSocialLoginDto;
 import Fodong.serverdong.domain.member.dto.response.ResponseMemberInfoDto;
 import Fodong.serverdong.domain.member.service.MemberService;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
@@ -28,12 +29,12 @@ public class MemberController {
      */
     @ApiDocumentResponse
     @Operation(summary = "소셜 로그인",description = "소셜 로그인을 진행합니다.")
-    @PostMapping(value = "/login/oauth/{socialType}")
+    @PostMapping(value = "/login/oauth")
     public ResponseEntity<ResponseMemberTokenDto> oauthLogin(
-            @PathVariable(name = "socialType") String socialType,
+            @RequestBody RequestSocialLoginDto loginDto,
             @RequestHeader("SocialToken") String authorization) {
 
-        ResponseMemberTokenDto responseMemberTokenDto = memberService.socialUserInfo(socialType, authorization);
+        ResponseMemberTokenDto responseMemberTokenDto = memberService.socialUserInfo(loginDto.getSocialType(), authorization);
 
         return new ResponseEntity<>(responseMemberTokenDto, HttpStatus.OK);
     }
