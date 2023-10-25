@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "랜덤 식당 리스트 조회", description = "랜덤으로 식당 리스트를 조회합니다.")
     @GetMapping("/random")
-    public List<ResponseRestaurantDto> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRandomRestaurant(memberId);

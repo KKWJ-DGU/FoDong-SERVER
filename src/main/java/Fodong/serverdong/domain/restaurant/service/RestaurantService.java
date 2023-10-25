@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -31,8 +29,8 @@ public class RestaurantService {
      * 랜덤 식당 리스트 조회
      */
     @Transactional
-    public List<ResponseRestaurantDto> getRandomRestaurant(Long memberId) {
-        return restaurantQueryRepository.getRandomRestaurant(memberId);
+    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(Long memberId) {
+        return Collections.singletonMap("randomRestaurantList",restaurantQueryRepository.getRandomRestaurant(memberId));
     }
 
     /**
