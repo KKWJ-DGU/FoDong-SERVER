@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class WishlistController {
     @ApiDocumentResponse
     @Operation(summary = "위시리스트 조회", description = "위시리스트에 있는 레스토랑 목록을 반환합니다.")
     @GetMapping
-    public List<ResponseRestaurantDto> getWishlist(@RequestParam(defaultValue = "0") Long categoryId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
+    public Map<String,List<ResponseRestaurantDto>> getWishlist(@RequestParam(defaultValue = "0") Long categoryId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
         Long memberId = memberAdapter.getMember().getId();
         return wishlistService.getWishlist(memberId, categoryId);
     }
