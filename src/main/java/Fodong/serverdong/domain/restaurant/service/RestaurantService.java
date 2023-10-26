@@ -91,7 +91,7 @@ public class RestaurantService {
         for(ResponseSearchRestaurantDto restaurantDto : searchRestaurant){
             HashSet<String> searchId = new HashSet<>(List.of(restaurantDto.getCategoryId().split(",")));
 
-            if(searchId.equals(requestId)){
+            if(searchId.containsAll(requestId)){
                 getCategoryRestaurant.add(restaurantDto);
             }
         }
