@@ -3,6 +3,7 @@ package Fodong.serverdong.domain.restaurant.service;
 import Fodong.serverdong.domain.category.repository.CategoryRepository;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchApiDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
@@ -76,7 +77,7 @@ public class RestaurantService {
      * @param memberId 회원 Id
      * @return 검색된 식당 리스트
      */
-    public Map<String,List<ResponseSearchRestaurantDto>> getSearchRestaurant(List<Long> categoryId,Long memberId) {
+    public ResponseSearchApiDto getSearchRestaurant(List<Long> categoryId, Long memberId) {
         categoryId.forEach(category ->
                 categoryRepository.findById(category).orElseThrow(()-> new CustomException(CustomErrorCode.CATEGORY_NOT_CONTAIN)));
 
@@ -95,6 +96,6 @@ public class RestaurantService {
             }
         }
 
-        return Collections.singletonMap("searchRestaurant",getCategoryRestaurant);
+        return new ResponseSearchApiDto(categoryId,getCategoryRestaurant);
     }
 }
