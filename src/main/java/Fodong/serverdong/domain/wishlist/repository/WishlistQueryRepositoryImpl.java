@@ -44,9 +44,9 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
                         restaurant.wishCount,
                         Expressions.constant(true)
                 ))
-                .from(restaurant)
-                .join(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
-                .leftJoin(restaurantCategory).on(restaurant.id.eq(restaurantCategory.restaurant.id))
+                .from(wishlist)
+                .join(wishlist.restaurantCategory, restaurantCategory)
+                .join(restaurantCategory.restaurant, restaurant)
                 .where(
                         wishlist.member.id.eq(memberId),
                         eqCategoryId(categoryId)

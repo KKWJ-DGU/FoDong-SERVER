@@ -1,6 +1,5 @@
 package Fodong.serverdong.domain.wishlist.service;
 
-import Fodong.serverdong.domain.category.Category;
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
@@ -50,19 +49,18 @@ public class WishlistService {
         List<Wishlist> wishlistsToAdd = new ArrayList<>();
 
         // 이미 위시리스트에 추가되어 있는지 검사
-        boolean isAlreadyWishlisted = wishlistRepository.findByMemberAndRestaurant(member, restaurant).size() > 0;
+        boolean isAlreadyWishlisted = !wishlistRepository.findByMemberAndRestaurantCategoryIn(member, restaurantCategories).isEmpty();
 
         // 각 카테고리에 대해 위시리스트 생성
         for (RestaurantCategory restaurantCategory : restaurantCategories) {
-            Category category = restaurantCategory.getCategory();
 
             // 이미 위시리스트에 동일한 항목이 있는지 검사
-            Optional<Wishlist> existingWishlist = wishlistRepository.findByMemberAndRestaurantAndCategory(member, restaurant, category);
+            Optional<Wishlist> existingWishlist = wishlistRepository.findByMemberAndRestaurantCategory(member, restaurantCategory);
             if (existingWishlist.isPresent()) {
                 continue;
             }
 
-            Wishlist wishlist = RequestWishlistCreationDto.toEntity(member, restaurant, category);
+            Wishlist wishlist = RequestWishlistCreationDto.toEntity(member, restaurantCategory);
             wishlistsToAdd.add(wishlist);
         }
         wishlistRepository.saveAll(wishlistsToAdd);
@@ -88,7 +86,8 @@ public class WishlistService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
-        List<Wishlist> wishlistsToDelete = wishlistRepository.findByMemberAndRestaurant(member, restaurant);
+        List<RestaurantCategory> restaurantCategories = restaurantCategoryRepository.findByRestaurantId(restaurantId);
+        List<Wishlist> wishlistsToDelete = wishlistRepository.findByMemberAndRestaurantCategoryIn(member, restaurantCategories);
 
         if (wishlistsToDelete.isEmpty()) {
             // 삭제할 위시리스트가 없으면 바로 종료

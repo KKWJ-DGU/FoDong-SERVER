@@ -1,8 +1,7 @@
 package Fodong.serverdong.domain.wishlist.repository;
 
-import Fodong.serverdong.domain.category.Category;
 import Fodong.serverdong.domain.member.Member;
-import Fodong.serverdong.domain.restaurant.Restaurant;
+import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,7 @@ import java.util.Optional;
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     List<Wishlist> findByMember(Member member);
-    Optional<Wishlist> findByMemberAndRestaurantAndCategory(Member member, Restaurant restaurant, Category category);
-    List<Wishlist> findByMemberAndRestaurant(Member member, Restaurant restaurant);
+    Optional<Wishlist> findByMemberAndRestaurantCategory(Member member, RestaurantCategory restaurantCategory);
+    List<Wishlist> findByMemberAndRestaurantCategoryIn(Member member, List<RestaurantCategory> restaurantCategories);
 
 }

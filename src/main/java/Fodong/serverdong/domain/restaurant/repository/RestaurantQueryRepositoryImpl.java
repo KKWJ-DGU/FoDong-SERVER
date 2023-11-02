@@ -46,9 +46,9 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
                         restaurant.id.in(
-                                JPAExpressions.select(restaurant.id)
-                                        .from(restaurant)
-                                        .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                JPAExpressions.select(restaurantCategory.restaurant.id)
+                                        .from(restaurantCategory)
+                                        .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                         .where(wishlist.member.id.eq(memberId))
                         )
                 ))
@@ -76,9 +76,9 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
                         restaurant.id.in(
-                                JPAExpressions.select(restaurant.id)
-                                        .from(restaurant)
-                                        .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                JPAExpressions.select(restaurantCategory.restaurant.id)
+                                        .from(restaurantCategory)
+                                        .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                         .where(wishlist.member.id.eq(memberId))
                         )
 
@@ -110,9 +110,9 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         .where(menu.restaurant.id.eq(restaurant.id)),
                 restaurant.wishCount,
                 restaurant.id.in(
-                        JPAExpressions.select(restaurant.id)
-                                .from(restaurant)
-                                .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                        JPAExpressions.select(restaurantCategory.restaurant.id)
+                                .from(restaurantCategory)
+                                .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                 .where(wishlist.member.id.eq(memberId))
                 )))
                 .from(restaurant)
@@ -139,9 +139,9 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
                         restaurant.id.in(
-                                JPAExpressions.select(restaurant.id)
-                                        .from(restaurant)
-                                        .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                JPAExpressions.select(restaurantCategory.restaurant.id)
+                                        .from(restaurantCategory)
+                                        .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                         .where(wishlist.member.id.eq(memberId))
                         )
 
@@ -174,9 +174,9 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                         .where(menu.restaurant.id.eq(restaurant.id)),
                                 restaurant.wishCount,
                                 restaurant.id.in(
-                                        JPAExpressions.select(restaurant.id)
-                                                .from(restaurant)
-                                                .leftJoin(wishlist).on(restaurant.id.eq(wishlist.restaurant.id))
+                                        JPAExpressions.select(restaurantCategory.restaurant.id)
+                                                .from(restaurantCategory)
+                                                .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                                 .where(wishlist.member.id.eq(memberId))
                                 )
                         ))
