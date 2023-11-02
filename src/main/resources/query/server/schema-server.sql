@@ -72,12 +72,18 @@ CREATE TABLE IF NOT EXISTS member_token(
 CREATE TABLE IF NOT EXISTS wishlist(
 
     wishlist_id BIGINT AUTO_INCREMENT,
-    restaurant_id BIGINT,
-    category_id BIGINT,
+    restaurant_category_id BIGINT,
     member_id BIGINT,
     created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (wishlist_id),
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id),
-    FOREIGN KEY (category_id) REFERENCES category(category_id),
+    FOREIGN KEY (restaurant_category_id) REFERENCES restaurant_category(restaurant_category_id),
     FOREIGN KEY (member_id) REFERENCES member(member_id)
-    );
+);
+
+ALTER TABLE wishlist
+DROP FOREIGN KEY wishlist_ibfk_1,
+DROP FOREIGN KEY wishlist_ibfk_2,
+DROP COLUMN restaurant_id,
+DROP COLUMN category_id,
+ADD COLUMN restaurant_category_id BIGINT,
+ADD FOREIGN KEY (restaurant_category_id) REFERENCES restaurant_category(restaurant_category_id);
