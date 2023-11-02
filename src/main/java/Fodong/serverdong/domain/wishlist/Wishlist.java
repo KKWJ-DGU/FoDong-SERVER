@@ -1,9 +1,7 @@
 package Fodong.serverdong.domain.wishlist;
 
-import Fodong.serverdong.domain.BaseTimeEntity;
-import Fodong.serverdong.domain.category.Category;
 import Fodong.serverdong.domain.member.Member;
-import Fodong.serverdong.domain.restaurant.Restaurant;
+import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,12 +23,8 @@ public class Wishlist {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "restaurant_category_id")
+    private RestaurantCategory restaurantCategory;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
