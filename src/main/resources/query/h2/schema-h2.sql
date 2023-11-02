@@ -78,11 +78,3 @@ CREATE TABLE IF NOT EXISTS wishlist(
     FOREIGN KEY (restaurant_category_id) REFERENCES restaurant_category(restaurant_category_id),
     FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
-
-ALTER TABLE wishlist DROP COLUMN restaurant_id;
-ALTER TABLE wishlist DROP COLUMN category_id;
-
-ALTER TABLE wishlist
-ADD COLUMN restaurant_category_id BIGINT;
-ALTER TABLE wishlist
-ADD FOREIGN KEY (restaurant_category_id) REFERENCES restaurant_category(restaurant_category_id);
