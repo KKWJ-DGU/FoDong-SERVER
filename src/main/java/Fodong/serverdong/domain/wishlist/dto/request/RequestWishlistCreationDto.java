@@ -1,8 +1,7 @@
 package Fodong.serverdong.domain.wishlist.dto.request;
 
-import Fodong.serverdong.domain.category.Category;
 import Fodong.serverdong.domain.member.Member;
-import Fodong.serverdong.domain.restaurant.Restaurant;
+import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +10,9 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class RequestWishlistCreationDto {
-    public static Wishlist toEntity(Member member, Restaurant restaurant, Category category) {
+    public static Wishlist toEntity(Member member, RestaurantCategory restaurantCategory) {
         return Wishlist.builder()
-                .restaurant(restaurant)
-                .category(category)
+                .restaurantCategory(restaurantCategory)
                 .member(member)
                 .createdDate(LocalDateTime.now())
                 .build();
