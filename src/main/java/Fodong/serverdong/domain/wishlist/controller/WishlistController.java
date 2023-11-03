@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.wishlist.controller;
 
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.wishlist.dto.request.RequestAddWishlistDto;
 import Fodong.serverdong.domain.wishlist.dto.request.RequestDeleteWishlistDto;
@@ -45,6 +46,14 @@ public class WishlistController {
     public Map<String,List<ResponseRestaurantDto>> getWishlist(@RequestParam(defaultValue = "0") Long categoryId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
         Long memberId = memberAdapter.getMember().getId();
         return wishlistService.getWishlist(memberId, categoryId);
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "위시리스트 카테고리 조회", description = "위시리스트에 있는 카테고리 목록을 반환합니다.")
+    @GetMapping("/category")
+    public Map<String,List<ResponseCategoryListDto>> getWishlistCategory(@AuthenticationPrincipal MemberAdapter memberAdapter) {
+        Long memberId = memberAdapter.getMember().getId();
+        return wishlistService.getWishlistCategoryList(memberId);
     }
 
 }

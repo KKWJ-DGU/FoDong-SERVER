@@ -87,14 +87,20 @@ class WishlistServiceTest {
 //    }
     @Test
     @DisplayName("위시리스트 전체 조회")
-    void deleteWishlistTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-
+    void getWishlistTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist")
                         .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("위시리스트 카테고리 조회")
+    void getWishlistCategoryTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist/category")
+                        .header("Authorization", "Bearer " + testMemberToken.getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
 }
