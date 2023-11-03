@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.wishlist.service;
 
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
@@ -111,5 +112,13 @@ public class WishlistService {
         return Collections.singletonMap("wishlist",wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId));
     }
 
+    /**
+     * 위시리스트 카테고리 리스트 조회
+     * @param memberId 회원 아이디
+     */
+    @Transactional
+    public Map<String,List<ResponseCategoryListDto>> getWishlistCategoryList(Long memberId) {
+        return Collections.singletonMap("wishlistCategoryList",wishlistQueryRepository.getWishlistCategory(memberId));
+    }
 
 }

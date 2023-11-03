@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.wishlist.repository;
 
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,6 +16,7 @@ import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
 import static Fodong.serverdong.domain.wishlist.QWishlist.wishlist;
+import static Fodong.serverdong.domain.category.QCategory.category;
 
 @Repository
 public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
@@ -56,6 +58,25 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
     }
     private BooleanExpression eqCategoryId(Long categoryId) {
         return categoryId != 0 ? restaurantCategory.category.id.eq(categoryId) : null;
+    }
+
+    /**
+     * 위시리스트 카테고리 리스트 조회
+     */
+    @Override
+    public List<ResponseCategoryListDto> getWishlistCategory(Long memberId) {
+        return query.select(Projections.constructor(
+                        ResponseCategoryListDto.class,
+                        category.id,
+                        category.categoryName,
+                        category.categoryImgUrl
+                ))
+                .from(wishlist)
+                .join(wishlist.restaurantCategory, restaurantCategory)
+                .join(restaurantCategory.category, category)
+                .where(wishlist.member.id.eq(memberId))
+                .distinct()
+                .fetch();
     }
 
 
