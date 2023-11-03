@@ -16,7 +16,6 @@ import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
 import static Fodong.serverdong.domain.wishlist.QWishlist.wishlist;
-import static Fodong.serverdong.domain.category.QCategory.category;
 
 @Repository
 public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
@@ -67,13 +66,11 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
     public List<ResponseCategoryListDto> getWishlistCategory(Long memberId) {
         return query.select(Projections.constructor(
                         ResponseCategoryListDto.class,
-                        category.id,
-                        category.categoryName,
-                        category.categoryImgUrl
+                        wishlist.restaurantCategory.category.id,
+                        wishlist.restaurantCategory.category.categoryName,
+                        wishlist.restaurantCategory.category.categoryImgUrl
                 ))
                 .from(wishlist)
-                .join(wishlist.restaurantCategory, restaurantCategory)
-                .join(restaurantCategory.category, category)
                 .where(wishlist.member.id.eq(memberId))
                 .distinct()
                 .fetch();
