@@ -1,7 +1,7 @@
 package Fodong.serverdong.domain.wishlist.repository;
 
 import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -30,12 +30,15 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
      * 위시리스트 식당 리스트 조회
      */
     @Override
-    public List<ResponseRestaurantDto> getWishlistRestaurant(Long memberId, Long categoryId) {
+    public List<ResponseSearchRestaurantDto> getWishlistRestaurant(Long memberId, List<Long> categoryId) {
         return query
                 .select(Projections.constructor(
-                        ResponseRestaurantDto.class,
+                        ResponseSearchRestaurantDto.class,
                         restaurant.name,
                         restaurant.imgUrl,
+                        select(Expressions.stringTemplate("group_concat({0})", restaurantCategory.category.id))
+                                .from(restaurantCategory)
+                                .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
                         select(Expressions.stringTemplate("group_concat({0})", restaurantCategory.category.categoryName))
                                 .from(restaurantCategory)
                                 .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
@@ -55,9 +58,13 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
                 .distinct()
                 .fetch();
     }
-    private BooleanExpression eqCategoryId(Long categoryId) {
-        return categoryId != 0 ? restaurantCategory.category.id.eq(categoryId) : null;
+    private BooleanExpression eqCategoryId(List<Long> categoryId) {
+        if (categoryId.contains(0L)) {
+            return null;
+        }
+        return restaurantCategory.category.id.in(categoryId);
     }
+
 
     /**
      * 위시리스트 카테고리 리스트 조회
