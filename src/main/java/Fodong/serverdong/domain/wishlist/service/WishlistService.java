@@ -4,7 +4,7 @@ import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -108,8 +109,24 @@ public class WishlistService {
      * @param categoryId 카테고리 아이디
      */
     @Transactional
-    public Map<String,List<ResponseRestaurantDto>> getWishlist(Long memberId, Long categoryId) {
-        return Collections.singletonMap("wishlist",wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId));
+    public Map<String,List<ResponseSearchRestaurantDto>> getWishlist(Long memberId, List<Long> categoryId) {
+        List<ResponseSearchRestaurantDto> originalList = wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId);
+
+        if (!categoryId.contains(0L)) {
+            List<ResponseSearchRestaurantDto> filteredList = originalList.stream()
+                    .filter(dto -> {
+                        List<Long> restaurantCategoryIds = Arrays.stream(dto.getCategoryId().split(","))
+                                .map(String::trim)
+                                .map(Long::parseLong)
+                                .collect(Collectors.toList());
+                        return restaurantCategoryIds.containsAll(categoryId);
+                    })
+                    .collect(Collectors.toList());
+
+            return Collections.singletonMap("wishlist", filteredList);
+        }
+
+        return Collections.singletonMap("wishlist", originalList);
     }
 
     /**
