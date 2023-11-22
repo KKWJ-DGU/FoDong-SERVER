@@ -1,7 +1,7 @@
 package Fodong.serverdong.domain.wishlist.repository;
 
 import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
+import Fodong.serverdong.domain.wishlist.dto.response.ResponseWishlistRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -30,10 +30,11 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
      * 위시리스트 식당 리스트 조회
      */
     @Override
-    public List<ResponseSearchRestaurantDto> getWishlistRestaurant(Long memberId, List<Long> categoryId) {
+    public List<ResponseWishlistRestaurantDto> getWishlistRestaurant(Long memberId, List<Long> categoryId) {
         return query
                 .select(Projections.constructor(
-                        ResponseSearchRestaurantDto.class,
+                        ResponseWishlistRestaurantDto.class,
+                        restaurant.id,
                         restaurant.name,
                         restaurant.imgUrl,
                         select(Expressions.stringTemplate("group_concat({0})", restaurantCategory.category.id))
