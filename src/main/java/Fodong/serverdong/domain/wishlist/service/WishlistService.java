@@ -4,12 +4,12 @@ import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
 import Fodong.serverdong.domain.member.Member;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.restaurant.Restaurant;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryRepository;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.dto.request.RequestWishlistCreationDto;
+import Fodong.serverdong.domain.wishlist.dto.response.ResponseWishlistRestaurantDto;
 import Fodong.serverdong.domain.wishlist.repository.WishlistQueryRepository;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -109,11 +109,11 @@ public class WishlistService {
      * @param categoryId 카테고리 아이디
      */
     @Transactional
-    public Map<String,List<ResponseSearchRestaurantDto>> getWishlist(Long memberId, List<Long> categoryId) {
-        List<ResponseSearchRestaurantDto> originalList = wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId);
+    public Map<String,List<ResponseWishlistRestaurantDto>> getWishlist(Long memberId, List<Long> categoryId) {
+        List<ResponseWishlistRestaurantDto> originalList = wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId);
 
         if (!categoryId.contains(0L)) {
-            List<ResponseSearchRestaurantDto> filteredList = originalList.stream()
+            List<ResponseWishlistRestaurantDto> filteredList = originalList.stream()
                     .filter(dto -> {
                         List<Long> restaurantCategoryIds = Arrays.stream(dto.getCategoryId().split(","))
                                 .map(String::trim)
