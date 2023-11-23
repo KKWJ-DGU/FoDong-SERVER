@@ -8,6 +8,7 @@ import lombok.Getter;
 public class ResponseWishlistRestaurantDto {
 
     private Long id;
+    private Long wishlistId;
     private String name;
     private String imgUrl;
     private String categoryId;

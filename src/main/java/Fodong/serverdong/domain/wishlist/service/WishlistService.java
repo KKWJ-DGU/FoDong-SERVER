@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,8 +113,14 @@ public class WishlistService {
     public Map<String,List<ResponseWishlistRestaurantDto>> getWishlist(Long memberId, List<Long> categoryId) {
         List<ResponseWishlistRestaurantDto> originalList = wishlistQueryRepository.getWishlistRestaurant(memberId, categoryId);
 
+        List<ResponseWishlistRestaurantDto> distinctList = originalList.stream()
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(ResponseWishlistRestaurantDto::getId, Function.identity(), (existing, replacement) -> existing, LinkedHashMap::new),
+                        map -> new ArrayList<>(map.values())
+                ));
+
         if (!categoryId.contains(0L)) {
-            List<ResponseWishlistRestaurantDto> filteredList = originalList.stream()
+            List<ResponseWishlistRestaurantDto> filteredList = distinctList.stream()
                     .filter(dto -> {
                         List<Long> restaurantCategoryIds = Arrays.stream(dto.getCategoryId().split(","))
                                 .map(String::trim)
@@ -126,7 +133,7 @@ public class WishlistService {
             return Collections.singletonMap("wishlist", filteredList);
         }
 
-        return Collections.singletonMap("wishlist", originalList);
+        return Collections.singletonMap("wishlist", distinctList);
     }
 
     /**
