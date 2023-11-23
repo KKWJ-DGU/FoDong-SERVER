@@ -35,6 +35,7 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
                 .select(Projections.constructor(
                         ResponseWishlistRestaurantDto.class,
                         restaurant.id,
+                        wishlist.id,
                         restaurant.name,
                         restaurant.imgUrl,
                         select(Expressions.stringTemplate("group_concat({0})", restaurantCategory.category.id))
@@ -56,6 +57,7 @@ public class WishlistQueryRepositoryImpl implements WishlistQueryRepository {
                         wishlist.member.id.eq(memberId),
                         eqCategoryId(categoryId)
                 )
+                .orderBy(wishlist.id.desc())
                 .distinct()
                 .fetch();
     }
