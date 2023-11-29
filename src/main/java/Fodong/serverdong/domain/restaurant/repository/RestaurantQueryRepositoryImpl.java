@@ -99,6 +99,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
         return query.select(Projections.constructor(
                 ResponseRestaurantInfoDto.class,
                 restaurant.name,
+                restaurant.address,
                 restaurant.imgUrl,
                 select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
                         .from(restaurantCategory)
