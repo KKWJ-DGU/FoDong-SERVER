@@ -2,14 +2,11 @@ package Fodong.serverdong.domain.restaurant.controller;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchApiDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import Fodong.serverdong.global.auth.adapter.MemberAdapter;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
 
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.service.RestaurantService;
-import Fodong.serverdong.global.exception.CustomErrorCode;
-import Fodong.serverdong.global.exception.CustomException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +45,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "식당 정보 조회" , description = "식당 정보를 조회합니다.")
     @GetMapping("/info/{restaurantId}")
-    public ResponseRestaurantInfoDto getRestaurantInfo(@PathVariable Long restaurantId , @AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRestaurantInfoDto>> getRestaurantInfo(@PathVariable Long restaurantId , @AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRestaurantInfo(restaurantId,memberId);

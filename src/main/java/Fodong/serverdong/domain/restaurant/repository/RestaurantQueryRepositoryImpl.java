@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseMenuInfo;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
@@ -16,6 +17,8 @@ import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
 import static Fodong.serverdong.domain.wishlist.QWishlist.wishlist;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.jpa.JPAExpressions.*;
 
 @Repository
@@ -95,30 +98,34 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * @param restaurantId 식당 ID
      */
     @Override
-    public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId){
-        return query.select(Projections.constructor(
-                ResponseRestaurantInfoDto.class,
-                restaurant.name,
-                restaurant.address,
-                restaurant.imgUrl,
-                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
-                        .from(restaurantCategory)
-                        .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                restaurant.phoneNumber,
-                restaurant.webUrl,
-                select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
-                        .from(menu)
-                        .where(menu.restaurant.id.eq(restaurant.id)),
-                restaurant.wishCount,
-                restaurant.id.in(
-                        JPAExpressions.select(restaurantCategory.restaurant.id)
-                                .from(restaurantCategory)
-                                .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
-                                .where(wishlist.member.id.eq(memberId))
-                )))
-                .from(restaurant)
+    public List<ResponseRestaurantInfoDto> getRestaurantInfo(Long restaurantId,Long memberId){
+
+        return query.selectFrom(restaurant)
+                .leftJoin(menu).on(restaurant.id.eq(menu.restaurant.id))
                 .where(restaurant.id.eq(restaurantId))
-                .fetchOne();
+                .transform(groupBy(restaurant.id).list(
+                        Projections.constructor(
+                                ResponseRestaurantInfoDto.class,
+                                restaurant.name,
+                                restaurant.address,
+                                restaurant.imgUrl,
+                                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                                        .from(restaurantCategory)
+                                        .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                                restaurant.phoneNumber,
+                                restaurant.webUrl,
+                                list(Projections.constructor(
+                                        ResponseMenuInfo.class,
+                                        menu.menuName,
+                                        menu.menuPrice
+                                )),
+                                restaurant.wishCount,
+                                restaurant.id.in(
+                                        JPAExpressions.select(restaurantCategory.restaurant.id)
+                                                .from(restaurantCategory)
+                                                .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
+                                                .where(wishlist.member.id.eq(memberId))
+                                ))));
 
     }
 
