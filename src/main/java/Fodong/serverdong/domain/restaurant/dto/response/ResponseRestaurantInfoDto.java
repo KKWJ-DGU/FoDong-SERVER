@@ -3,6 +3,8 @@ package Fodong.serverdong.domain.restaurant.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 public class ResponseRestaurantInfoDto {
@@ -13,7 +15,7 @@ public class ResponseRestaurantInfoDto {
     private String categoryName;
     private String phoneNumber;
     private String webUrl;
-    private String menu;
+    private List<ResponseMenuInfo> menuInfoList;
     private int wishCount;
     private Boolean wishState;
 
