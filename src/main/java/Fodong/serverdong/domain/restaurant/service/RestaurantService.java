@@ -54,10 +54,10 @@ public class RestaurantService {
      * @param memberId 회원 ID
      * @return 식당 정보
      */
-    public ResponseRestaurantInfoDto getRestaurantInfo(Long restaurantId,Long memberId) {
+    public Map<String,List<ResponseRestaurantInfoDto>> getRestaurantInfo(Long restaurantId,Long memberId) {
         restaurantRepository.findById(restaurantId).orElseThrow(()->new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
-        return restaurantQueryRepository.getRestaurantInfo(restaurantId,memberId );
+        return Collections.singletonMap("restaurantInfo",restaurantQueryRepository.getRestaurantInfo(restaurantId,memberId ));
     }
 
     /**
