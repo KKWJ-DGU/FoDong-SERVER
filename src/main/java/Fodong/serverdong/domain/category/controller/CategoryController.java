@@ -1,7 +1,7 @@
 package Fodong.serverdong.domain.category.controller;
 
 
-import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryInfoListDto;
 import Fodong.serverdong.domain.category.service.CategoryService;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public class CategoryController {
     @ApiDocumentResponse
     @Operation( summary = "카테고리 리스트", description = "카테고리 리스트를 조회합니다.")
     @GetMapping("/list")
-    public Map<String,List<ResponseCategoryListDto>> getCategoryList(){
+    public Map<String,List<ResponseCategoryInfoListDto>> getCategoryList(){
         return categoryService.getCategoryList();
     }
 }

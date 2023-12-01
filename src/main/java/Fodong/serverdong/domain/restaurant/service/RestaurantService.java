@@ -1,12 +1,12 @@
 package Fodong.serverdong.domain.restaurant.service;
 
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryInfoListDto;
 import Fodong.serverdong.domain.category.repository.CategoryRepository;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchApiDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
+import Fodong.serverdong.domain.menu.repository.MenuQueryRepositoryImpl;
+import Fodong.serverdong.domain.restaurant.dto.response.*;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantQueryRepositoryImpl;
 import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
+import Fodong.serverdong.domain.restaurantCategory.repository.RestaurantCategoryQueryRepositoryImpl;
 import Fodong.serverdong.global.exception.CustomErrorCode;
 import Fodong.serverdong.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +25,21 @@ public class RestaurantService {
 
     private final RestaurantQueryRepositoryImpl restaurantQueryRepository;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantCategoryQueryRepositoryImpl restaurantCategoryQueryRepository;
     private final CategoryRepository categoryRepository;
+    private final MenuQueryRepositoryImpl menuQueryRepository;
 
     /**
      * 랜덤 식당 리스트 조회
      * @param memberId 회원 ID
      * @return 랜덤 식당 리스트
      */
-    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(Long memberId) {
-        return Collections.singletonMap("randomRestaurantList",restaurantQueryRepository.getRandomRestaurant(memberId));
+    public Map<String,List<ResponseRandomRestaurantDto>> getRandomRestaurant(Long memberId) {
+        List<ResponseRandomRestaurantDto> responseRestaurantDto = restaurantQueryRepository.getRandomRestaurant(memberId);
+        List<ResponseRandomRestaurantDto> responseRandomRestaurantDto = new ArrayList<>(responseRestaurantDto);
+        Collections.shuffle(responseRandomRestaurantDto);
+
+        return Collections.singletonMap("randomRestaurantList",responseRandomRestaurantDto);
     }
 
     /**
@@ -50,14 +56,21 @@ public class RestaurantService {
 
     /**
      * 식당 정보 조회
+     *
      * @param restaurantId 식당 ID
-     * @param memberId 회원 ID
+     * @param memberId     회원 ID
      * @return 식당 정보
      */
-    public Map<String,List<ResponseRestaurantInfoDto>> getRestaurantInfo(Long restaurantId,Long memberId) {
+    public Map<String, ResponseRestaurantAllInfoDto> getRestaurantInfo(Long restaurantId, Long memberId) {
         restaurantRepository.findById(restaurantId).orElseThrow(()->new CustomException(CustomErrorCode.RESTAURANT_NOT_FOUND));
 
-        return Collections.singletonMap("restaurantInfo",restaurantQueryRepository.getRestaurantInfo(restaurantId,memberId ));
+        List<ResponseRestaurantBasicInfoDto> restaurantInfoDto = restaurantQueryRepository.getRestaurantInfo(restaurantId,memberId);
+        List<ResponseMenuInfoListDto> responseMenuInfoListDto = menuQueryRepository.getMenuInfoList(restaurantId);
+        List<ResponseCategoryInfoListDto> responseCategoryInfoListDto = restaurantCategoryQueryRepository.getRestaurantCategoryId(restaurantId);
+
+        ResponseRestaurantAllInfoDto responseRestaurantAllInfoDto = new ResponseRestaurantAllInfoDto(restaurantInfoDto,responseMenuInfoListDto, responseCategoryInfoListDto);
+
+        return Collections.singletonMap("restaurantInfo", responseRestaurantAllInfoDto);
     }
 
     /**

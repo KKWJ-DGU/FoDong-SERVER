@@ -1,6 +1,6 @@
 package Fodong.serverdong.domain.category.service;
 
-import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryInfoListDto;
 import Fodong.serverdong.domain.category.repository.CategoryQueryRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -23,9 +23,9 @@ class CategoryServiceTest {
     @Test
     @DisplayName("카테고리 리스트 조회")
     void CategoryList(){
-        List<ResponseCategoryListDto> categoryList = categoryQueryRepository.getCategoryList();
+        List<ResponseCategoryInfoListDto> categoryList = categoryQueryRepository.getCategoryList();
 
-        for(ResponseCategoryListDto category : categoryList){
+        for(ResponseCategoryInfoListDto category : categoryList){
             log.info(String.valueOf(category.getId()));
             log.info(category.getCategoryName());
             log.info(category.getCategoryImg());

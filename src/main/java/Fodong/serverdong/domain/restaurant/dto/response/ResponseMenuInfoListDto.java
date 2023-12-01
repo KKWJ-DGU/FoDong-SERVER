@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ResponseMenuInfo {
+public class ResponseMenuInfoListDto {
 
     private String menuName;
     private String menuPrice;
