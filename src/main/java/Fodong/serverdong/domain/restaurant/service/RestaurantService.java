@@ -34,8 +34,12 @@ public class RestaurantService {
      * @param memberId 회원 ID
      * @return 랜덤 식당 리스트
      */
-    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(Long memberId) {
-        return Collections.singletonMap("randomRestaurantList",restaurantQueryRepository.getRandomRestaurant(memberId));
+    public Map<String,List<ResponseRandomRestaurantDto>> getRandomRestaurant(Long memberId) {
+        List<ResponseRandomRestaurantDto> responseRestaurantDto = restaurantQueryRepository.getRandomRestaurant(memberId);
+        List<ResponseRandomRestaurantDto> responseRandomRestaurantDto = new ArrayList<>(responseRestaurantDto);
+        Collections.shuffle(responseRandomRestaurantDto);
+
+        return Collections.singletonMap("randomRestaurantList",responseRandomRestaurantDto);
     }
 
     /**

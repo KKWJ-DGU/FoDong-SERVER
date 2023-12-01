@@ -1,5 +1,7 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryInfoListDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRandomRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantBasicInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
@@ -8,6 +10,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
+
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -31,30 +36,33 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * 랜덤 식당 리스트 조회
      */
     @Override
-    public List<ResponseRestaurantDto> getRandomRestaurant(Long memberId){
+    public List<ResponseRandomRestaurantDto> getRandomRestaurant(Long memberId){
 
-        return query.
-                select(Projections.constructor(
-                        ResponseRestaurantDto.class,
-                        restaurant.name,
-                        restaurant.imgUrl,
-                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
-                                .from(restaurantCategory)
-                                .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+            return query.selectFrom(restaurant)
+                    .leftJoin(restaurantCategory).on(restaurant.id.eq(restaurantCategory.restaurant.id))
+                    .transform(groupBy(restaurant.id).list(Projections.constructor(
+                            ResponseRandomRestaurantDto.class,
+                            restaurant.id,
+                            restaurant.name,
+                            restaurant.imgUrl,
+                            list(Projections.constructor(
+                                    ResponseCategoryInfoListDto.class,
+                                    restaurantCategory.category.id,
+                                    restaurantCategory.category.categoryName,
+                                    restaurantCategory.category.categoryImgUrl
+                            )),
+                            select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
-                        restaurant.wishCount,
-                        restaurant.id.in(
+                            restaurant.wishCount,
+                            restaurant.id.in(
                                 JPAExpressions.select(restaurantCategory.restaurant.id)
                                         .from(restaurantCategory)
                                         .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                         .where(wishlist.member.id.eq(memberId))
-                        )
-                ))
-                .from(restaurant)
-                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-                .fetch();
+                            )
+                    )));
+
 
     }
 

@@ -1,5 +1,6 @@
 package Fodong.serverdong.domain.restaurant.controller;
 
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRandomRestaurantDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantAllInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchApiDto;
 import Fodong.serverdong.global.auth.adapter.MemberAdapter;
@@ -26,7 +27,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "랜덤 식당 리스트 조회", description = "랜덤으로 식당 리스트를 조회합니다.")
     @GetMapping("/random")
-    public Map<String,List<ResponseRestaurantDto>> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String,List<ResponseRandomRestaurantDto>> getRandomRestaurant(@AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRandomRestaurant(memberId);
