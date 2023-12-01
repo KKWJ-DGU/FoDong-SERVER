@@ -89,6 +89,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                 .from(restaurant)
                 .leftJoin(restaurantCategory).on(restaurant.id.eq(restaurantCategory.restaurant.id))
                 .where(restaurantCategory.category.id.in(categoryId))
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .distinct()
                 .fetch();
     }
