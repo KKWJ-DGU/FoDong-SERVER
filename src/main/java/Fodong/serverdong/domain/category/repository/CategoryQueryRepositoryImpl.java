@@ -1,6 +1,6 @@
 package Fodong.serverdong.domain.category.repository;
 
-import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryInfoListDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -19,9 +19,9 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
         this.query = new JPAQueryFactory(em);
     }
     @Override
-    public List<ResponseCategoryListDto> getCategoryList(){
+    public List<ResponseCategoryInfoListDto> getCategoryList(){
         return query.select(Projections.constructor(
-                ResponseCategoryListDto.class,
+                ResponseCategoryInfoListDto.class,
                 category.id,
                 category.categoryName,
                 category.categoryImgUrl
@@ -30,10 +30,5 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                 .fetch();
     }
 
-    @Override
-    public Long getCategoryId(){
-        return query.select(category.id)
-                .from(category)
-                .fetchFirst();
-    }
+
 }
