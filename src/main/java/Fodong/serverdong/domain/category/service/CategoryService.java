@@ -1,6 +1,6 @@
 package Fodong.serverdong.domain.category.service;
 
-import Fodong.serverdong.domain.category.dto.response.ResponseCategoryListDto;
+import Fodong.serverdong.domain.category.dto.response.ResponseCategoryInfoListDto;
 import Fodong.serverdong.domain.category.repository.CategoryQueryRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class CategoryService {
      * @return 카테고리 리스트
      */
     @Transactional(readOnly = true)
-    public Map<String,List<ResponseCategoryListDto>> getCategoryList() {
+    public Map<String,List<ResponseCategoryInfoListDto>> getCategoryList() {
 
         return Collections.singletonMap("categoryList",categoryQueryRepository.getCategoryList());
     }

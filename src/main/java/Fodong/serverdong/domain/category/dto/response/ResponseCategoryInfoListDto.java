@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ResponseCategoryListDto {
+public class ResponseCategoryInfoListDto {
 
     private Long id;
     private String categoryName;
