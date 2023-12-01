@@ -1,6 +1,6 @@
 package Fodong.serverdong.domain.restaurant.controller;
 
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantAllInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchApiDto;
 import Fodong.serverdong.global.auth.adapter.MemberAdapter;
 import Fodong.serverdong.global.config.ApiDocumentResponse;
@@ -45,7 +45,7 @@ public class RestaurantController {
     @ApiDocumentResponse
     @Operation(summary = "식당 정보 조회" , description = "식당 정보를 조회합니다.")
     @GetMapping("/info/{restaurantId}")
-    public Map<String,List<ResponseRestaurantInfoDto>> getRestaurantInfo(@PathVariable Long restaurantId , @AuthenticationPrincipal MemberAdapter memberAdapter){
+    public Map<String, ResponseRestaurantAllInfoDto> getRestaurantInfo(@PathVariable Long restaurantId , @AuthenticationPrincipal MemberAdapter memberAdapter){
 
         Long memberId = memberAdapter.getMember().getId();
         return restaurantService.getRestaurantInfo(restaurantId,memberId);

@@ -1,8 +1,7 @@
 package Fodong.serverdong.domain.restaurant.repository;
 
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseMenuInfo;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantDto;
-import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantInfoDto;
+import Fodong.serverdong.domain.restaurant.dto.response.ResponseRestaurantBasicInfoDto;
 import Fodong.serverdong.domain.restaurant.dto.response.ResponseSearchRestaurantDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -17,8 +16,6 @@ import static Fodong.serverdong.domain.menu.QMenu.menu;
 import static Fodong.serverdong.domain.restaurant.QRestaurant.restaurant;
 import static Fodong.serverdong.domain.restaurantCategory.QRestaurantCategory.restaurantCategory;
 import static Fodong.serverdong.domain.wishlist.QWishlist.wishlist;
-import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.jpa.JPAExpressions.*;
 
 @Repository
@@ -99,34 +96,28 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * @param restaurantId 식당 ID
      */
     @Override
-    public List<ResponseRestaurantInfoDto> getRestaurantInfo(Long restaurantId,Long memberId){
+    public List<ResponseRestaurantBasicInfoDto> getRestaurantInfo(Long restaurantId, Long memberId){
 
-        return query.selectFrom(restaurant)
-                .leftJoin(menu).on(restaurant.id.eq(menu.restaurant.id))
-                .where(restaurant.id.eq(restaurantId))
-                .transform(groupBy(restaurant.id).list(
-                        Projections.constructor(
-                                ResponseRestaurantInfoDto.class,
-                                restaurant.name,
-                                restaurant.address,
-                                restaurant.imgUrl,
-                                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+        return query
+                .select(Projections.constructor(
+                        ResponseRestaurantBasicInfoDto.class,
+                        restaurant.name,
+                        restaurant.address,
+                        restaurant.imgUrl,
+                        restaurant.phoneNumber,
+                        restaurant.webUrl,
+                        restaurant.wishCount,
+                        restaurant.id.in(
+                                JPAExpressions.select(restaurantCategory.restaurant.id)
                                         .from(restaurantCategory)
-                                        .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                                restaurant.phoneNumber,
-                                restaurant.webUrl,
-                                list(Projections.constructor(
-                                        ResponseMenuInfo.class,
-                                        menu.menuName,
-                                        menu.menuPrice
-                                )),
-                                restaurant.wishCount,
-                                restaurant.id.in(
-                                        JPAExpressions.select(restaurantCategory.restaurant.id)
-                                                .from(restaurantCategory)
-                                                .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
-                                                .where(wishlist.member.id.eq(memberId))
-                                ))));
+                                        .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
+                                        .where(wishlist.member.id.eq(memberId))
+                        )
+
+                ))
+                .from(restaurant)
+                .where(restaurant.id.eq(restaurantId))
+                .fetch();
 
     }
 
