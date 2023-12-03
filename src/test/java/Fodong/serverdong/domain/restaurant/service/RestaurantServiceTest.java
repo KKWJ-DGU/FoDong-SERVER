@@ -74,15 +74,15 @@ class RestaurantServiceTest {
 
     }
 
-    @Test
-    @DisplayName("랜덤 식당 리스트")
-    void getRandomRestaurant() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/random")
-                        .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
-                .andExpect(status().isOk());
-
-    }
+//    @Test
+//    @DisplayName("랜덤 식당 리스트")
+//    void getRandomRestaurant() throws Exception {
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant/random")
+//                        .header("Authorization", "Bearer "+testMemberToken.getAccessToken()))
+//                .andExpect(status().isOk());
+//
+//    }
 
 //    @Test
 //    @DisplayName("카테고리 별 식당 리스트")

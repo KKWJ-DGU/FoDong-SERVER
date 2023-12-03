@@ -51,7 +51,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                     restaurantCategory.category.categoryName,
                                     restaurantCategory.category.categoryImgUrl
                             )),
-                            select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                            select(Expressions.stringTemplate("group_concat(' ',{0})",menu.menuName).trim())
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                             restaurant.wishCount,
@@ -76,10 +76,10 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         ResponseRestaurantDto.class,
                         restaurant.name,
                         restaurant.imgUrl,
-                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                        select(Expressions.stringTemplate("group_concat(' ',{0})",restaurantCategory.category.categoryName).trim())
                                 .from(restaurantCategory)
                                 .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                        select(Expressions.stringTemplate("group_concat(' ',{0})",menu.menuName).trim())
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
@@ -139,10 +139,10 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                         ResponseRestaurantDto.class,
                         restaurant.name,
                         restaurant.imgUrl,
-                        select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName).coalesce("카테고리 없음").as("categoryName"))
+                        select(Expressions.stringTemplate("group_concat(' ',{0})",restaurantCategory.category.categoryName).trim())
                                 .from(restaurantCategory)
                                 .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                        select(Expressions.stringTemplate("group_concat({0})",menu.menuName).coalesce("메뉴 없음").as("menuName"))
+                        select(Expressions.stringTemplate("group_concat(' ',{0})",menu.menuName).trim())
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
                         restaurant.wishCount,
@@ -174,10 +174,10 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                 select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.id))
                                         .from(restaurantCategory)
                                         .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                                select(Expressions.stringTemplate("group_concat({0})",restaurantCategory.category.categoryName))
+                                select(Expressions.stringTemplate("group_concat(' ',{0})",restaurantCategory.category.categoryName).trim())
                                         .from(restaurantCategory)
                                         .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
-                                select(Expressions.stringTemplate("group_concat({0})",menu.menuName))
+                                select(Expressions.stringTemplate("group_concat(' ',{0})",menu.menuName).trim())
                                         .from(menu)
                                         .where(menu.restaurant.id.eq(restaurant.id)),
                                 restaurant.wishCount,
