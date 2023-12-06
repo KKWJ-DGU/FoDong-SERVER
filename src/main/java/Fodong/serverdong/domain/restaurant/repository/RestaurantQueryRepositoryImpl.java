@@ -109,6 +109,7 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
         return query
                 .select(Projections.constructor(
                         ResponseRestaurantBasicInfoDto.class,
+                        restaurant.id,
                         restaurant.name,
                         restaurant.address,
                         restaurant.imgUrl,

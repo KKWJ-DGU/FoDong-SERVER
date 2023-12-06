@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class ResponseRestaurantBasicInfoDto {
 
+    private Long id;
     private String name;
     private String address;
     private String imgUrl;

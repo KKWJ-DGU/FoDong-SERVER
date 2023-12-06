@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 public class ResponseRestaurantAllInfoDto {
 
+    private Long id;
     private String name;
     private String address;
     private String imgUrl;
@@ -21,6 +22,7 @@ public class ResponseRestaurantAllInfoDto {
     private Boolean wishState;
 
     public ResponseRestaurantAllInfoDto(List<ResponseRestaurantBasicInfoDto> responseRestaurantBasicInfoDto,List<ResponseMenuInfoListDto> responseMenuInfoListDto, List<ResponseCategoryInfoListDto> responseCategoryInfoListDto){
+        this.id= responseRestaurantBasicInfoDto.get(0).getId();
         this.name= responseRestaurantBasicInfoDto.get(0).getName();
         this.address= responseRestaurantBasicInfoDto.get(0).getAddress();
         this.imgUrl= responseRestaurantBasicInfoDto.get(0).getImgUrl();
