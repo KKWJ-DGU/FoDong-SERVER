@@ -5,6 +5,7 @@ import lombok.*;
 @Getter
 public class ResponseRestaurantDto {
 
+    private Long id;
     private String name;
     private String imgUrl;
     private String categoryName;
