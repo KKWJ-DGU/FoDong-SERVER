@@ -37,7 +37,7 @@ public class MemberService {
     /**
      * 소셜 로그인
      * @param socialType (KAKAO, APPLE) 소셜 로그인 타입
-     * @param accessToken 인가토큰
+     * @param accessToken 소셜 토큰
      */
     public ResponseMemberTokenDto socialUserInfo(String socialType, String accessToken) {
         SocialType type;
@@ -93,6 +93,11 @@ public class MemberService {
         return new ResponseMemberInfoDto(member.getNickname());
     }
 
+    /**
+     * 회원 탈퇴
+     * @param memberId 회원 ID
+     * @param accessToken 소셜 토큰
+     */
     @Transactional
     public void deleteMember(Long memberId, String accessToken) {
         Member member = memberRepository.findById(memberId)
@@ -112,6 +117,9 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
+    /**
+     * 이메일로부터 소셜 타입 추출
+     */
     private SocialType extractSocialTypeFromEmail(String email) {
         int start = email.indexOf('[');
         int end = email.indexOf(']');
@@ -128,7 +136,9 @@ public class MemberService {
         }
     }
 
-
+    /**
+     * 소셜 서비스 연결 끊기
+     */
     private void unlinkSocialAccount(SocialType socialType, String accessToken) {
         switch (socialType) {
             case KAKAO:
@@ -142,6 +152,9 @@ public class MemberService {
         }
     }
 
+    /**
+     * 식당 위시카운트 감소 및 위시리스트 삭제
+     */
     private void deleteWishlists(Member member) {
         List<Wishlist> wishlists = wishlistRepository.findByMember(member);
         for (Wishlist wishlist : wishlists) {
