@@ -5,6 +5,12 @@ import Fodong.serverdong.domain.member.dto.response.ResponseMemberInfoDto;
 import Fodong.serverdong.domain.member.enums.SocialType;
 import Fodong.serverdong.domain.member.repository.MemberRepository;
 import Fodong.serverdong.domain.memberToken.dto.response.ResponseMemberTokenDto;
+import Fodong.serverdong.domain.memberToken.repository.MemberTokenRepository;
+import Fodong.serverdong.domain.restaurant.Restaurant;
+import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
+import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
+import Fodong.serverdong.domain.wishlist.Wishlist;
+import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialSignOut;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -14,12 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberTokenRepository memberTokenRepository;
+    private final WishlistRepository wishlistRepository;
+    private final RestaurantRepository restaurantRepository;
     private final KakaoSocialLogin kakaoSocialLogin;
     private final KakaoSocialSignOut kakaoSocialSignOut;
 
@@ -89,6 +100,16 @@ public class MemberService {
 
         SocialType socialType = extractSocialTypeFromEmail(member.getEmail());
         unlinkSocialAccount(socialType, accessToken);
+
+        // wishlist 삭제 및 wishCount 감소
+        deleteWishlists(member);
+
+        // MemberToken 삭제
+        memberTokenRepository.findByMemberId(memberId)
+                .ifPresent(memberTokenRepository::delete);
+
+        // Member 삭제
+        memberRepository.delete(member);
     }
 
     private SocialType extractSocialTypeFromEmail(String email) {
@@ -118,6 +139,21 @@ public class MemberService {
                 break;
             default:
                 throw new CustomException(CustomErrorCode.UNSUPPORTED_SOCIAL_TYPE);
+        }
+    }
+
+    private void deleteWishlists(Member member) {
+        List<Wishlist> wishlists = wishlistRepository.findByMember(member);
+        for (Wishlist wishlist : wishlists) {
+            RestaurantCategory restaurantCategory = wishlist.getRestaurantCategory();
+            Restaurant restaurant = restaurantCategory.getRestaurant();
+
+            // wishCount 감소
+            restaurant.decreaseWishCount();
+            restaurantRepository.save(restaurant);
+
+            // Wishlist 삭제
+            wishlistRepository.delete(wishlist);
         }
     }
 }

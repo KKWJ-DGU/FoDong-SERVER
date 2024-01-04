@@ -62,4 +62,16 @@ public class MemberController {
         return ResponseEntity.ok("User details received " + memberAdapter.getUsername());
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "회원 탈퇴",description = "회원 탈퇴를 진행합니다.")
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<String> deleteAccount(
+            @AuthenticationPrincipal MemberAdapter memberAdapter,
+            @RequestHeader("SocialToken") String authorization) {
+
+        Long memberId = memberAdapter.getMember().getId();
+        memberService.deleteMember(memberId, authorization);
+
+        return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다.");
+    }
 }
