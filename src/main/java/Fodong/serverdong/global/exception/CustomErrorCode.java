@@ -27,7 +27,8 @@ public enum CustomErrorCode {
     MEMBER_DUPLICATED_NICKNAME(BAD_REQUEST, "사용 중인 닉네임입니다."),
     REFRESH_TOKEN_MISSING(BAD_REQUEST, "리프레시 토큰이 없습니다."),
     ACCESS_TOKEN_MISSING(BAD_REQUEST, "엑세스 토큰이 없습니다."),
-    KAKAO_UNLINK_FAILURE(BAD_REQUEST,"카카오 회원 탈퇴에 실패하였습니다.");
+    KAKAO_UNLINK_FAILURE(BAD_REQUEST,"카카오 회원 탈퇴에 실패하였습니다."),
+    INVALID_EMAIL_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 형식이 잘못되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
