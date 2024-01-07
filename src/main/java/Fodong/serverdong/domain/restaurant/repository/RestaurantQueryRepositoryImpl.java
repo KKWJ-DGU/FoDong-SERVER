@@ -135,15 +135,21 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
      * 랜덤 식당 1개 조회
      */
     @Override
-    public List<ResponseRestaurantDto> getRandomRestaurantChoice(Long memberId){
-        return query
-                .select(Projections.constructor(
-                        ResponseRestaurantDto.class,
+    public List<ResponseRandomRestaurantDto> getRandomRestaurantChoice(Long memberId){
+
+        return query.selectFrom(restaurant)
+                .leftJoin(restaurantCategory).on(restaurant.id.eq(restaurantCategory.restaurant.id))
+                .transform(groupBy(restaurant.id).list(Projections.constructor(
+                        ResponseRandomRestaurantDto.class,
+                        restaurant.id,
                         restaurant.name,
                         restaurant.imgUrl,
-                        select(Expressions.stringTemplate("group_concat(' ',{0})",restaurantCategory.category.categoryName).trim())
-                                .from(restaurantCategory)
-                                .where(restaurantCategory.restaurant.id.eq(restaurant.id)),
+                        list(Projections.constructor(
+                                ResponseCategoryInfoListDto.class,
+                                restaurantCategory.category.id,
+                                restaurantCategory.category.categoryName,
+                                restaurantCategory.category.categoryImgUrl
+                        )),
                         select(Expressions.stringTemplate("group_concat(' ',{0})",menu.menuName).trim())
                                 .from(menu)
                                 .where(menu.restaurant.id.eq(restaurant.id)),
@@ -154,12 +160,9 @@ public class RestaurantQueryRepositoryImpl implements RestaurantQueryRepository{
                                         .leftJoin(wishlist).on(restaurantCategory.id.eq(wishlist.restaurantCategory.id))
                                         .where(wishlist.member.id.eq(memberId))
                         )
+                )));
 
-                ))
-                .from(restaurant)
-                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-                .limit(15L)
-                .fetch();
+
     }
 
     /**
