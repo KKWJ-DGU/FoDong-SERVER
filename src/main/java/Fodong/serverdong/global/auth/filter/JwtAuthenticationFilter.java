@@ -29,8 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String LOGIN_URL = "/api/member/login/oauth";
     private static final String SWAGGER_UI_URL = "/fodong/swagger-ui";
     private static final String TOKEN_REISSUE_URL = "/api/membertoken/reissue";
-    private static final String APPLE_TEST = "/api/member/apple/callback";
-    private static final String APPLE_TEST2 = "/apple/home";
+//    private static final String APPLE_TEST = "/api/member/apple/callback";
+//    private static final String APPLE_TEST2 = "/apple/home";
     private final JwtService jwtService;
     private final MemberTokenRepository memberTokenRepository;
 
@@ -39,7 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
-        if(requestURI.contains(LOGIN_URL) || requestURI.contains(SWAGGER_UI_URL) || requestURI.contains(APPLE_TEST) || requestURI.contains(APPLE_TEST2)){
+//        if(requestURI.contains(LOGIN_URL) || requestURI.contains(SWAGGER_UI_URL) || requestURI.contains(APPLE_TEST) || requestURI.contains(APPLE_TEST2)){
+        if(requestURI.contains(LOGIN_URL) || requestURI.contains(SWAGGER_UI_URL)){
             filterChain.doFilter(request,response);
             return;
         }

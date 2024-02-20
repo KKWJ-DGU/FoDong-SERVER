@@ -77,8 +77,8 @@ public class MemberController {
         return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다.");
     }
 
-    @PostMapping("/apple/callback")
-    public ResponseMemberTokenDto callback(HttpServletRequest request) throws Exception {
-        return memberService.appleSocialLoginTest(request.getParameter("code"));
-    }
+//    @PostMapping("/apple/callback")
+//    public ResponseMemberTokenDto callback(HttpServletRequest request) throws Exception {
+//        return memberService.appleSocialLoginTest(request.getParameter("code"));
+//    }
 }

@@ -205,10 +205,10 @@ public class AppleSocialLogin {
      * Apple 로그인 테스트 페이지 URL 생성
      */
 
-    public String getAppleLogin() {
-        return audience + "/auth/authorize"
-                + "?client_id=" + clientId
-                + "&redirect_uri=" + redirectUrl
-                + "&response_type=code%20id_token&scope=name%20email&response_mode=form_post";
-    }
+//    public String getAppleLogin() {
+//        return audience + "/auth/authorize"
+//                + "?client_id=" + clientId
+//                + "&redirect_uri=" + redirectUrl
+//                + "&response_type=code%20id_token&scope=name%20email&response_mode=form_post";
+//    }
 }

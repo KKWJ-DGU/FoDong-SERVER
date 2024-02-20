@@ -175,8 +175,8 @@ public class MemberService {
         }
     }
 
-    @Transactional
-    public ResponseMemberTokenDto appleSocialLoginTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
-    }
+//    @Transactional
+//    public ResponseMemberTokenDto appleSocialLoginTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+//        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
+//    }
 }
