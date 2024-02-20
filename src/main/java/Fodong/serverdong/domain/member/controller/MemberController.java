@@ -16,6 +16,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +37,7 @@ public class MemberController {
     @PostMapping(value = "/login/oauth")
     public ResponseEntity<ResponseMemberTokenDto> oauthLogin(
             @RequestBody RequestSocialLoginDto loginDto,
-            @RequestHeader("SocialToken") String authorization) {
+            @RequestHeader("SocialToken") String authorization) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         ResponseMemberTokenDto responseMemberTokenDto = memberService.socialUserInfo(loginDto.getSocialType(), authorization);
 

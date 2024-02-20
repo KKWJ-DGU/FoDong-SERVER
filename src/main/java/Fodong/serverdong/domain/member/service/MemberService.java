@@ -44,7 +44,7 @@ public class MemberService {
      * @param socialType (KAKAO, APPLE) 소셜 로그인 타입
      * @param accessToken 소셜 토큰
      */
-    public ResponseMemberTokenDto socialUserInfo(String socialType, String accessToken) {
+    public ResponseMemberTokenDto socialUserInfo(String socialType, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         SocialType type;
         try {
             type = SocialType.valueOf(socialType);
@@ -55,8 +55,8 @@ public class MemberService {
         switch (type) {
             case KAKAO:
                 return kakaoSocialLogin.getUserInfo(accessToken);
-//             case APPLE:
-//                return appleSocialLogin.getUserInfo(code);
+             case APPLE:
+                return appleSocialLogin.handleAppleSocialLogin(accessToken);
             default:
                 throw new CustomException(CustomErrorCode.UNSUPPORTED_SOCIAL_TYPE);
         }
