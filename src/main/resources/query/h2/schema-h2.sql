@@ -78,9 +78,3 @@ CREATE TABLE IF NOT EXISTS wishlist(
     FOREIGN KEY (restaurant_category_id) REFERENCES restaurant_category(restaurant_category_id),
     FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
-
-ALTER TABLE member_token
-ALTER COLUMN access_token VARCHAR(1024);
-
-ALTER TABLE member_token
-ALTER COLUMN refresh_token VARCHAR(1024);
