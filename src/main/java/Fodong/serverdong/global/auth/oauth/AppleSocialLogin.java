@@ -70,23 +70,28 @@ public class AppleSocialLogin {
      */
     public ResponseMemberTokenDto handleAppleSocialLogin(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        AppleIdTokenPayload payload = getMemberInfo(authorizationCode);
-        String email = String.valueOf(payload.getEmail()) + "[" + socialType + "]";
+        try {
+            AppleIdTokenPayload payload = getMemberInfo(authorizationCode);
+            String email = String.valueOf(payload.getEmail()) + "[" + socialType + "]";
 
-        // JWT 발급
-        ResponseTokenDto accessResponseTokenDto = jwtService.createAccessToken(email);
-        ResponseTokenDto refreshResponseTokenDto = jwtService.createRefreshToken();
+            // JWT 발급
+            ResponseTokenDto accessResponseTokenDto = jwtService.createAccessToken(email);
+            ResponseTokenDto refreshResponseTokenDto = jwtService.createRefreshToken();
 
-        TokenInfoDto tokenInfo = new TokenInfoDto(
-                accessResponseTokenDto.getToken(),
-                refreshResponseTokenDto.getToken(),
-                accessResponseTokenDto.getExpiryDate(),
-                refreshResponseTokenDto.getExpiryDate()
-        );
+            TokenInfoDto tokenInfo = new TokenInfoDto(
+                    accessResponseTokenDto.getToken(),
+                    refreshResponseTokenDto.getToken(),
+                    accessResponseTokenDto.getExpiryDate(),
+                    refreshResponseTokenDto.getExpiryDate()
+            );
 
-        return memberRepository.findByEmail(email)
-                .map(existingMember -> handleExistingUserToken(existingMember, tokenInfo))
-                .orElseGet(() -> saveNewMember(email, tokenInfo));
+            return memberRepository.findByEmail(email)
+                    .map(existingMember -> handleExistingUserToken(existingMember, tokenInfo))
+                    .orElseGet(() -> saveNewMember(email, tokenInfo));
+
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorCode.APPLE_LOGIN_FAILED);
+        }
     }
 
     /**
