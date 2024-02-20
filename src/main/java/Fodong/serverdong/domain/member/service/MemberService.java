@@ -11,6 +11,7 @@ import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
+import Fodong.serverdong.global.auth.oauth.AppleSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialSignOut;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -20,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @Service
@@ -33,13 +37,14 @@ public class MemberService {
     private final RestaurantRepository restaurantRepository;
     private final KakaoSocialLogin kakaoSocialLogin;
     private final KakaoSocialSignOut kakaoSocialSignOut;
+    private final AppleSocialLogin appleSocialLogin;
 
     /**
      * 소셜 로그인
      * @param socialType (KAKAO, APPLE) 소셜 로그인 타입
      * @param accessToken 소셜 토큰
      */
-    public ResponseMemberTokenDto socialUserInfo(String socialType, String accessToken) {
+    public ResponseMemberTokenDto socialUserInfo(String socialType, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         SocialType type;
         try {
             type = SocialType.valueOf(socialType);
@@ -50,8 +55,8 @@ public class MemberService {
         switch (type) {
             case KAKAO:
                 return kakaoSocialLogin.getUserInfo(accessToken);
-//             case APPLE:
-//                return appleSocialLogin.getUserInfo(code);
+             case APPLE:
+                return appleSocialLogin.handleAppleSocialLogin(accessToken);
             default:
                 throw new CustomException(CustomErrorCode.UNSUPPORTED_SOCIAL_TYPE);
         }
@@ -169,4 +174,9 @@ public class MemberService {
             wishlistRepository.delete(wishlist);
         }
     }
+
+//    @Transactional
+//    public ResponseMemberTokenDto appleSocialLoginTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+//        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
+//    }
 }

@@ -15,6 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
@@ -32,7 +37,7 @@ public class MemberController {
     @PostMapping(value = "/login/oauth")
     public ResponseEntity<ResponseMemberTokenDto> oauthLogin(
             @RequestBody RequestSocialLoginDto loginDto,
-            @RequestHeader("SocialToken") String authorization) {
+            @RequestHeader("SocialToken") String authorization) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         ResponseMemberTokenDto responseMemberTokenDto = memberService.socialUserInfo(loginDto.getSocialType(), authorization);
 
@@ -74,4 +79,9 @@ public class MemberController {
 
         return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다.");
     }
+
+//    @PostMapping("/apple/callback")
+//    public ResponseMemberTokenDto callback(HttpServletRequest request) throws Exception {
+//        return memberService.appleSocialLoginTest(request.getParameter("code"));
+//    }
 }

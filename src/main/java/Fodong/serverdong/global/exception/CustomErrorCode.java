@@ -28,8 +28,11 @@ public enum CustomErrorCode {
     REFRESH_TOKEN_MISSING(BAD_REQUEST, "리프레시 토큰이 없습니다."),
     ACCESS_TOKEN_MISSING(BAD_REQUEST, "엑세스 토큰이 없습니다."),
     KAKAO_UNLINK_FAILURE(BAD_REQUEST,"카카오 회원 탈퇴에 실패하였습니다."),
-    INVALID_EMAIL_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 형식이 잘못되었습니다.");
-
+    INVALID_EMAIL_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 형식이 잘못되었습니다."),
+    APPLE_TOKEN_RETRIEVE_FAILED(HttpStatus.BAD_REQUEST, "토큰 검색에 실패했습니다."),
+    APPLE_TOKEN_PAYLOAD_DECODING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 페이로드 디코딩 중 오류가 발생했습니다."),
+    APPLE_LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "애플 로그인에 실패했습니다."),
+    APPLE_AUTHORIZATION_CODE_NULL(HttpStatus.INTERNAL_SERVER_ERROR, "애플 인가 코드 응답이 비어있습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 

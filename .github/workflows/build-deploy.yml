@@ -41,6 +41,11 @@ jobs:
           touch ./src/main/resources/application-jwt.yml
           echo "${{ secrets.APPLICATION_JWT_YML }}" | base64 --decode > src/main/resources/application-jwt.yml
 
+      - name: Set oauth YML
+        run: |
+          touch ./src/main/resources/application-oauth.yml
+          echo "${{ secrets.APPLICATION_OAUTH_YML }}" | base64 --decode > src/main/resources/application-oauth.yml
+
       - name: Build and Test
         run: ./gradlew build test
 
