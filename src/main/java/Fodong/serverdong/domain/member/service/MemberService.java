@@ -11,6 +11,7 @@ import Fodong.serverdong.domain.restaurant.repository.RestaurantRepository;
 import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
+import Fodong.serverdong.global.auth.oauth.AppleSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialSignOut;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -20,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @Service
@@ -33,6 +37,7 @@ public class MemberService {
     private final RestaurantRepository restaurantRepository;
     private final KakaoSocialLogin kakaoSocialLogin;
     private final KakaoSocialSignOut kakaoSocialSignOut;
+    private final AppleSocialLogin appleSocialLogin;
 
     /**
      * 소셜 로그인
@@ -168,5 +173,10 @@ public class MemberService {
             // Wishlist 삭제
             wishlistRepository.delete(wishlist);
         }
+    }
+
+    @Transactional
+    public ResponseMemberTokenDto appleSocialLoginTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
     }
 }
