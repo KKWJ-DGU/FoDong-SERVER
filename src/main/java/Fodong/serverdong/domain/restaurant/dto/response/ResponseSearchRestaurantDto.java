@@ -8,6 +8,7 @@ import lombok.Getter;
 public class ResponseSearchRestaurantDto {
 
 
+    private Long id;
     private String name;
     private String imgUrl;
     private String categoryId;
