@@ -72,7 +72,7 @@ public class MemberController {
     @DeleteMapping(value = "/delete")
     public ResponseEntity<String> deleteAccount(
             @AuthenticationPrincipal MemberAdapter memberAdapter,
-            @RequestHeader("SocialToken") String authorization) {
+            @RequestHeader("SocialToken") String authorization) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         Long memberId = memberAdapter.getMember().getId();
         memberService.deleteMember(memberId, authorization);
@@ -80,8 +80,8 @@ public class MemberController {
         return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다.");
     }
 
-    @PostMapping("/apple/callback")
-    public void callback(HttpServletRequest request) throws Exception {
-        memberService.appleSocialSignOutTest(request.getParameter("code"));
-    }
+//    @PostMapping("/apple/callback")
+//    public void callback(HttpServletRequest request) throws Exception {
+//        memberService.appleSocialSignOutTest(request.getParameter("code"));
+//    }
 }

@@ -106,7 +106,7 @@ public class MemberService {
      * @param accessToken 소셜 토큰
      */
     @Transactional
-    public void deleteMember(Long memberId, String accessToken) {
+    public void deleteMember(Long memberId, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
 
@@ -146,13 +146,13 @@ public class MemberService {
     /**
      * 소셜 서비스 연결 끊기
      */
-    private void unlinkSocialAccount(SocialType socialType, String accessToken) {
+    private void unlinkSocialAccount(SocialType socialType, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         switch (socialType) {
             case KAKAO:
                 kakaoSocialSignOut.unlinkKakaoAccount(accessToken);
                 break;
             case APPLE:
-                // appleSocialSignOut.unlinkAppleAccount(accessToken);
+                appleSocialSignOut.unlinkAppleAccount(accessToken);
                 break;
             default:
                 throw new CustomException(CustomErrorCode.UNSUPPORTED_SOCIAL_TYPE);
@@ -182,8 +182,8 @@ public class MemberService {
 //        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
 //    }
 
-    @Transactional
-    public void appleSocialSignOutTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        appleSocialSignOut.unlinkAppleAccount(authorizationCode);
-    }
+//    @Transactional
+//    public void appleSocialSignOutTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+//        appleSocialSignOut.unlinkAppleAccount(authorizationCode);
+//    }
 }
