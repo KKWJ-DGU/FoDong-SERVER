@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -33,7 +33,7 @@ import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AppleSocialLogin {
 
@@ -173,7 +173,7 @@ public class AppleSocialLogin {
     /**
      * 클라이언트 시크릿 생성
      */
-    private String getClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public String getClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Date expiration = Date.from(LocalDateTime.now().plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
@@ -207,9 +207,25 @@ public class AppleSocialLogin {
     }
 
     /**
-     * Apple 로그인 테스트 페이지 URL 생성
+     * Apple 인증 코드로 애플 accessToken 조회
      */
+    public String getAccessToken(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        if (authorizationCode == null) {
+            throw new CustomException(CustomErrorCode.APPLE_AUTHORIZATION_CODE_NULL);
+        }
 
+        String clientSecret = getClientSecret();
+        AppleTokenRequestBody requestBody = new AppleTokenRequestBody(clientId, clientSecret, grantType, authorizationCode, redirectUrl);
+        AppleTokenResponse tokenResponse = appleClient.appleTokenResponse(requestBody);
+
+        return tokenResponse.getAccessToken();
+
+    }
+
+//    /**
+//     * Apple 로그인 테스트 페이지 URL 생성
+//     */
+//
 //    public String getAppleLogin() {
 //        return audience + "/auth/authorize"
 //                + "?client_id=" + clientId

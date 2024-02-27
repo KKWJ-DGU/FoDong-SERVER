@@ -12,6 +12,7 @@ import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.auth.oauth.AppleSocialLogin;
+import Fodong.serverdong.global.auth.oauth.AppleSocialSignOut;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialSignOut;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -38,6 +39,7 @@ public class MemberService {
     private final KakaoSocialLogin kakaoSocialLogin;
     private final KakaoSocialSignOut kakaoSocialSignOut;
     private final AppleSocialLogin appleSocialLogin;
+    private final AppleSocialSignOut appleSocialSignOut;
 
     /**
      * 소셜 로그인
@@ -104,7 +106,7 @@ public class MemberService {
      * @param accessToken 소셜 토큰
      */
     @Transactional
-    public void deleteMember(Long memberId, String accessToken) {
+    public void deleteMember(Long memberId, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.MEMBER_NOT_FOUND));
 
@@ -144,13 +146,13 @@ public class MemberService {
     /**
      * 소셜 서비스 연결 끊기
      */
-    private void unlinkSocialAccount(SocialType socialType, String accessToken) {
+    private void unlinkSocialAccount(SocialType socialType, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         switch (socialType) {
             case KAKAO:
                 kakaoSocialSignOut.unlinkKakaoAccount(accessToken);
                 break;
             case APPLE:
-                // appleSocialSignOut.unlinkAppleAccount(accessToken);
+                appleSocialSignOut.unlinkAppleAccount(accessToken);
                 break;
             default:
                 throw new CustomException(CustomErrorCode.UNSUPPORTED_SOCIAL_TYPE);
@@ -178,5 +180,10 @@ public class MemberService {
 //    @Transactional
 //    public ResponseMemberTokenDto appleSocialLoginTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 //        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
+//    }
+
+//    @Transactional
+//    public void appleSocialSignOutTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+//        appleSocialSignOut.unlinkAppleAccount(authorizationCode);
 //    }
 }
