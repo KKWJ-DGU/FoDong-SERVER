@@ -12,6 +12,7 @@ import Fodong.serverdong.domain.restaurantCategory.RestaurantCategory;
 import Fodong.serverdong.domain.wishlist.Wishlist;
 import Fodong.serverdong.domain.wishlist.repository.WishlistRepository;
 import Fodong.serverdong.global.auth.oauth.AppleSocialLogin;
+import Fodong.serverdong.global.auth.oauth.AppleSocialSignOut;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialLogin;
 import Fodong.serverdong.global.auth.oauth.KakaoSocialSignOut;
 import Fodong.serverdong.global.exception.CustomErrorCode;
@@ -38,6 +39,7 @@ public class MemberService {
     private final KakaoSocialLogin kakaoSocialLogin;
     private final KakaoSocialSignOut kakaoSocialSignOut;
     private final AppleSocialLogin appleSocialLogin;
+    private final AppleSocialSignOut appleSocialSignOut;
 
     /**
      * 소셜 로그인
@@ -179,4 +181,9 @@ public class MemberService {
 //    public ResponseMemberTokenDto appleSocialLoginTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 //        return appleSocialLogin.handleAppleSocialLogin(authorizationCode);
 //    }
+
+    @Transactional
+    public void appleSocialSignOutTest(String authorizationCode) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        appleSocialSignOut.unlinkAppleAccount(authorizationCode);
+    }
 }
